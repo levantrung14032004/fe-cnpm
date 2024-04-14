@@ -1,24 +1,115 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Provider } from "react-redux";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import "./App.css";
+import store from "./store.js";
+import Cart from "./components/cart/Cart.jsx";
+import Register from "./components/Register/Register.jsx";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword.jsx";
+import Login from "./components/Login/Login.jsx";
+import MyAccount from "./components/MyAccount/MyAccount.jsx";
+import ContentProduct from "./components/ContentProduct/ContentProduct.jsx";
+import Mainpage from "./components/Mainpage/Mainpage.jsx";
+import Layout from "./components/Layout/Layout.js";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <Mainpage />
+              </Layout>
+            }
+          ></Route>
+          <Route
+            path="/cart"
+            element={
+              <Layout>
+                <Cart></Cart>
+              </Layout>
+            }
+          ></Route>
+
+          <Route
+            path="/products"
+            element={
+              <Layout>
+                <ContentProduct />
+              </Layout>
+            }
+          ></Route>
+          <Route
+            path="/login"
+            element={
+              <Layout>
+                <Login />
+              </Layout>
+            }
+          ></Route>
+          <Route
+            path="/register"
+            element={
+              <Layout>
+                <Register />
+              </Layout>
+            }
+          ></Route>
+          <Route
+            path="/product/:product-id"
+            element={
+              <Layout>
+                <Mainpage />
+              </Layout>
+            }
+          ></Route>
+          <Route
+            path="/search"
+            element={
+              <Layout>
+                <Mainpage />
+              </Layout>
+            }
+          ></Route>
+          <Route
+            path="/search/:value-search"
+            element={
+              <Layout>
+                <Mainpage />
+              </Layout>
+            }
+          ></Route>
+          <Route
+            path="/my-account"
+            element={
+              <Layout>
+                <MyAccount />
+              </Layout>
+            }
+          ></Route>
+          <Route
+            path="/admin"
+            element={
+              <Layout>
+                <Mainpage />
+              </Layout>
+            }
+          ></Route>
+          <Route
+            path="/recover-password"
+            element={
+              <Layout>
+                <ForgotPassword />
+              </Layout>
+            }
+          ></Route>
+        </Routes>
+      </Router>
+    </Provider>
   );
 }
 
