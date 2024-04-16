@@ -12,6 +12,7 @@ import MyAccount from "./components/MyAccount/MyAccount.jsx";
 import ContentProduct from "./components/ContentProduct/ContentProduct.jsx";
 import Mainpage from "./components/Mainpage/Mainpage.jsx";
 import Layout from "./components/Layout/Layout.js";
+import Products from "./components/Products/Products.jsx";
 
 function App() {
   return (
@@ -39,7 +40,7 @@ function App() {
             path="/products"
             element={
               <Layout>
-                <ContentProduct />
+                <Products />
               </Layout>
             }
           ></Route>

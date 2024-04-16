@@ -35,42 +35,43 @@ export default function Header() {
             <Link to="/">
               <li className="navbar-item px-1 py-[20px]">TRANG CHỦ</li>
             </Link>
-            <Link to="/products">
-              <li className="navbar-item px-1 py-[20px] relative">
-                SẢN PHẨM
-                <div className="modal-products shadow flex justify-between p-[18px] absolute w-[670px] text-left mt-[20px] bg-white z-5 ">
-                  <div className="col-1">
-                    <p className="title font-bold">TÁC GIẢ TIÊU BIỂU</p>
-                    <ul>
-                      <li className="mt-7">Đặng Ngọc Minh Trang</li>
-                      <li className="mt-7">Đặng Ngọc Minh Trang</li>
-                      <li className="mt-7">Đặng Ngọc Minh Trang</li>
-                      <li className="mt-7">Đặng Ngọc Minh Trang</li>
-                      <li className="mt-7">Đặng Ngọc Minh Trang</li>
-                    </ul>
-                  </div>
-                  <div className="col-2">
-                    <p className="title font-bold">SÁCH</p>
-                    <ul>
-                      <li className="mt-7">Sách Ảnh</li>
-                      <li className="mt-7">Sách Chiêm Tinh – Horoscope</li>
-                      <li className="mt-7">Sách Chiêm Tinh – Horoscope</li>
-                      <li className="mt-7">Sách Chiêm Tinh – Horoscope</li>
-                      <li className="mt-7">Sách Chiêm Tinh – Horoscope</li>
-                    </ul>
-                  </div>
-                  <div className="col-3">
-                    <p className="title font-bold">CÁC SẢN PHẨM KHÁC</p>
-                    <ul>
-                      <li className="mt-7">Huy Hiệu Tráng Men</li>
-                      <li className="mt-7">Boardgame</li>
-                      <li className="mt-7">Bookmark</li>
-                      <li className="mt-7">Huy Hiệu Tráng Men</li>
-                      <li className="mt-7">Huy Hiệu Tráng Men</li>
-                    </ul>
-                  </div>
+            <Link
+              to="/products"
+              className="navbar-item px-1 py-[20px] relative"
+            >
+              SẢN PHẨM
+              <div className="modal-products shadow flex justify-between p-[18px] absolute w-[670px] text-left mt-[20px] bg-white z-5 ">
+                <div className="col-1">
+                  <p className="title font-bold">TÁC GIẢ TIÊU BIỂU</p>
+                  <ul>
+                    <li className="mt-7">Đặng Ngọc Minh Trang</li>
+                    <li className="mt-7">Đặng Ngọc Minh Trang</li>
+                    <li className="mt-7">Đặng Ngọc Minh Trang</li>
+                    <li className="mt-7">Đặng Ngọc Minh Trang</li>
+                    <li className="mt-7">Đặng Ngọc Minh Trang</li>
+                  </ul>
                 </div>
-              </li>
+                <div className="col-2">
+                  <p className="title font-bold">SÁCH</p>
+                  <ul>
+                    <li className="mt-7">Sách Ảnh</li>
+                    <li className="mt-7">Sách Chiêm Tinh – Horoscope</li>
+                    <li className="mt-7">Sách Chiêm Tinh – Horoscope</li>
+                    <li className="mt-7">Sách Chiêm Tinh – Horoscope</li>
+                    <li className="mt-7">Sách Chiêm Tinh – Horoscope</li>
+                  </ul>
+                </div>
+                <div className="col-3">
+                  <p className="title font-bold">CÁC SẢN PHẨM KHÁC</p>
+                  <ul>
+                    <li className="mt-7">Huy Hiệu Tráng Men</li>
+                    <li className="mt-7">Boardgame</li>
+                    <li className="mt-7">Bookmark</li>
+                    <li className="mt-7">Huy Hiệu Tráng Men</li>
+                    <li className="mt-7">Huy Hiệu Tráng Men</li>
+                  </ul>
+                </div>
+              </div>
             </Link>
 
             <Link to={`${isLogin ? "/my-account" : "/login"}`}>
