@@ -208,14 +208,20 @@ export default function Header() {
                 <div className="mt-[80px]">
                   <p>Giá sản phẩm: 358,000₫</p>
                   <div className="">
-                    <div className="w-full h-[46px] bg-orange-500 text-white flex items-center justify-center mt-5 rounded-sm hover:bg-slate-400 hover:cursor-pointer duration-75 font-medium">
+                    <Link
+                      to="/payment"
+                      className="w-full h-[46px] bg-orange-500 text-white flex items-center justify-center mt-5 rounded-sm hover:bg-slate-400 hover:cursor-pointer duration-75 font-medium"
+                    >
                       <FaLock />
                       <p className="ml-3">Thanh Toán</p>
-                    </div>
-                    <div className="w-full h-[46px] bg-white text-slate-950 flex items-center justify-center mt-5 border-slate-700 rounded-sm hover:bg-orange-500 hover:cursor-pointer hover:text-white duration-75 font-medium">
+                    </Link>
+                    <Link
+                      to="/cart"
+                      className="w-full h-[46px] bg-white text-slate-950 flex items-center justify-center mt-5 border-slate-700 rounded-sm hover:bg-orange-500 hover:cursor-pointer hover:text-white duration-75 font-medium"
+                    >
                       <BsCart />
                       <p>Giỏ Hàng</p>
-                    </div>
+                    </Link>
                   </div>
                 </div>
               </div>

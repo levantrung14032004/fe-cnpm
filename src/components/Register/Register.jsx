@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Register.css";
-// import sendEmail from "../../Controller/sendEmail.js";
+// import SendEmail from "../../Controller/sendEmail.js";
 import { validEmail } from "../regex.js";
 
 export default function Register() {

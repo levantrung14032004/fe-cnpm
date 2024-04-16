@@ -1,4 +1,5 @@
 import "./cart.css";
+import { Link } from "react-router-dom";
 import img_Product from "../../Images/Img_Product/TEMPLATE_1.jpg";
 import { FaTimes } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
@@ -87,10 +88,13 @@ export default function Cart() {
                 Apply
               </button>
             </div>
-            <div className=" border flex items-center p-3 px-4 font-semibold">
+            <Link
+              to="/products"
+              className=" border flex items-center p-3 px-4 font-semibold"
+            >
               <CiShoppingCart />
               <p>TIẾP TỤC MUA SẮM</p>
-            </div>
+            </Link>
           </div>
         </div>
 

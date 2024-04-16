@@ -13,6 +13,7 @@ import ContentProduct from "./components/ContentProduct/ContentProduct.jsx";
 import Mainpage from "./components/Mainpage/Mainpage.jsx";
 import Layout from "./components/Layout/Layout.js";
 import Products from "./components/Products/Products.jsx";
+import Payment from "./components/Payment/Payment.jsx";
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
             path="/cart"
             element={
               <Layout>
-                <Cart></Cart>
+                <Cart />
               </Layout>
             }
           ></Route>
@@ -93,10 +94,10 @@ function App() {
             }
           ></Route>
           <Route
-            path="/admin"
+            path="/payment"
             element={
               <Layout>
-                <Mainpage />
+                <Payment />
               </Layout>
             }
           ></Route>
