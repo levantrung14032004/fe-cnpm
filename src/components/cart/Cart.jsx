@@ -100,29 +100,34 @@ export default function Cart() {
 
         {/* After Cart */}
         <div className="w-[1170px] m-auto mb-[40px]">
-          <div className="">
-            <div className="bg-[#fcfcfc] w-[540px] py-[40px] px-[30px] text-left rounded">
-              <p className="font-bold mb-7">Cộng giỏ hàng</p>
-              <div className="flex justify-between items-center">
-                <p className="text-thin text-sm">Tạm tính</p>
-                <span className="inline-block font-bold">78,000₫</span>
+          <div className="flex justify-between">
+            <div></div>
+            <div>
+              <div className="bg-[#fcfcfc] w-[540px] py-[40px] px-[30px] text-left rounded">
+                <p className="font-bold mb-7">Cộng giỏ hàng</p>
+                <div className="flex justify-between items-center">
+                  <p className="text-thin text-sm">Tạm tính</p>
+                  <span className="inline-block font-bold">78,000₫</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="text-thin text-sm">Giao hàng</p>
+                  <span className="inline-block font-bold">
+                    Phí vận chuyển sẽ báo sau.
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="text-thin text-sm">Tổng</p>
+                  <span className="inline-block font-bold">78,000₫</span>
+                </div>
+                <Link to="/checkout">
+                  <button
+                    type="button"
+                    className="h-full w-[300px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 mt-5 flex items-center justify-center "
+                  >
+                    <FaLock className="mr-2" /> TIẾN HÀNH THANH TOÁN
+                  </button>
+                </Link>
               </div>
-              <div className="flex justify-between items-center">
-                <p className="text-thin text-sm">Giao hàng</p>
-                <span className="inline-block font-bold">
-                  Phí vận chuyển sẽ báo sau.
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <p className="text-thin text-sm">Tổng</p>
-                <span className="inline-block font-bold">78,000₫</span>
-              </div>
-              <button
-                type="button"
-                className="h-full w-[300px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 mt-5 flex items-center justify-center "
-              >
-                <FaLock className="mr-2" /> TIẾN HÀNH THANH TOÁN
-              </button>
             </div>
           </div>
         </div>
