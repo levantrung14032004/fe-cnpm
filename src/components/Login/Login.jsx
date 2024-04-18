@@ -108,7 +108,7 @@ export default function Login() {
             className="h-full w-[150px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 my-10"
             onClick={validate}
           >
-            Đăng Ký
+            Đăng Nhập
           </button>
           {emailErr && <p>Your email is invalid</p>}
           {pwdError && <p>Your password is invalid</p>}

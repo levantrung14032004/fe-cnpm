@@ -65,7 +65,7 @@ function App() {
             path="/product/:product-id"
             element={
               <Layout>
-                <Mainpage />
+                <ContentProduct />
               </Layout>
             }
           ></Route>

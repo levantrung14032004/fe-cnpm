@@ -1,15 +1,63 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "./Register.css";
-// import SendEmail from "../../Controller/sendEmail.js";
+import emailjs from "@emailjs/browser";
 import { validEmail } from "../regex.js";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [emailErr, setEmailErr] = useState(false);
+  const [haveCode, setHaveCode] = useState(false);
+  const [code, setCode] = useState("");
+  const [codeInEmail, setCodeInEmail] = useState("");
 
-  const validate = () => {
+  function generateRandomCode() {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let code = "";
+    const length = 6;
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      code += characters.charAt(randomIndex);
+    }
+
+    return code;
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!validEmail.test(email)) {
       setEmailErr(true);
+    }
+    const SERVICE_ID = "service_ya55pmw";
+    const TEMPLATE_ID = "template_7s7l3dp";
+    const PUBLIC_KEY = "pXtlsZO24cP_oKbtG";
+    const code = generateRandomCode();
+    setCodeInEmail(code);
+
+    var data = {
+      service_id: SERVICE_ID,
+      template_id: TEMPLATE_ID,
+      user_id: PUBLIC_KEY,
+      template_params: {
+        to_email: email,
+        to_name: email,
+        from_name: "Comicola",
+        message: code,
+      },
+    };
+    try {
+      await axios.post("https://api.emailjs.com/api/v1.0/email/send", data);
+      setEmail("");
+      alert("Email đã được gửi, bạn vui lòng kiểm tra email để tiếp tục");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleSubmitCode = () => {
+    if (code === codeInEmail.trim().toUpperCase()) {
+      setHaveCode(true);
     }
   };
 
@@ -37,25 +85,60 @@ export default function Register() {
               <p className="font-thin">Địa chỉ email đăng ký mới</p>{" "}
               <span className="inline text-[red]">*</span>
             </div>
-            <input
-              type="email"
-              pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
-              name=""
-              id=""
-              className="outline-none border w-full my-2 px-2 py-2"
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              value={email}
-            />
+            <div className="flex gap-x-7 h-[40px] items-center">
+              <input
+                type="email"
+                pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+                name=""
+                id=""
+                className="outline-none border w-full my-2 px-2 py-2"
+                placeholder="Nhập email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                value={email}
+              />
+              <button
+                type="button"
+                className="h-full w-[150px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 my-10"
+                onClick={handleSubmit}
+              >
+                Gửi Mã
+              </button>
+            </div>
+
             {emailErr && <p className="text-red-600">Email is not valid</p>}
             <p className="font-thin mt-3">
               A link to set a new password will be sent to your email address.
             </p>
+            <div className="flex mt-10">
+              <p className="font-thin">Kiểm tra mail để lấy mã</p>{" "}
+              <span className="inline text-[red]">*</span>
+            </div>
+            <div className="flex gap-x-7 h-[40px] items-center  w-[300px]">
+              <input
+                type="text"
+                name=""
+                id=""
+                className="outline-none border w-full my-2 px-2 py-2"
+                placeholder="Mã xác thực"
+                onChange={(e) => {
+                  setCode(e.target.value);
+                }}
+                value={code}
+              />
+              <button
+                type="button"
+                className="h-full w-[150px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 my-10"
+                onClick={handleSubmitCode}
+              >
+                Xác nhận
+              </button>
+            </div>
             <button
               type="button"
               className="h-full w-[150px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 my-10"
-              onClick={validate}
+              onClick={handleSubmit}
             >
               Đăng Ký
             </button>

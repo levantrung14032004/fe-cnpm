@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Checkout.css";
+import ImageProduct from "../../Images/Img_Product/TEMPLATE_1.jpg";
 
 export default function Checkout() {
   const [idProvince, setIdProvince] = useState(null);
@@ -62,7 +63,7 @@ export default function Checkout() {
         <div className="checkout">
           <div></div>
           <div className="grid grid-cols-2 gap-x-[30px]">
-            <div className="location border p-6">
+            <div className="location border p-6  pt-[50px]">
               <p className="font-bold text-lg">THÔNG TIN GIAO HÀNG</p>
               <p className="text-base font-light text-slate-500 ">
                 Vui lòng nhập thông tin của bạn vào bên dưới để tiếp tục thanh
@@ -74,13 +75,13 @@ export default function Checkout() {
                     <label htmlFor="name ">Tên </label>
                     <span className="inline text-[red]">*</span>
                   </div>
-                  <br />
                   <input
                     type="text"
                     name=""
                     id="name"
                     placeholder="Nhập tên"
                     className="h-[30px] border-slate-200 focus:ring-0 w-[230px] "
+                    required
                   />
                 </div>
                 <div>
@@ -88,13 +89,13 @@ export default function Checkout() {
                     <label htmlFor="">Họ</label>
                     <span className="inline text-[red]">*</span>
                   </div>
-                  <br />
                   <input
                     type="text"
                     name=""
                     id="name"
                     placeholder="Nhập họ"
                     className="h-[30px] border-slate-200 focus:ring-0 w-[230px] "
+                    required
                   />
                 </div>
               </div>
@@ -105,13 +106,13 @@ export default function Checkout() {
                     <label htmlFor="name">Số điện thoại</label>
                     <span className="inline text-[red]">*</span>
                   </div>
-                  <br />
                   <input
                     type="text"
                     name=""
                     id="phoneNumber"
                     placeholder="Số điện thoại"
                     className="h-[30px] border-slate-200 focus:ring-0 w-[230px] "
+                    required
                   />
                 </div>
                 <div>
@@ -119,13 +120,13 @@ export default function Checkout() {
                     <label htmlFor="email ">Địa chỉ Email</label>
                     <span className="inline text-[red]">*</span>
                   </div>
-                  <br />
                   <input
                     type="text"
                     name=""
                     id="email"
                     placeholder="Địa chỉ Email"
                     className="h-[30px] border-slate-200 focus:ring-0 w-[230px] "
+                    required
                   />
                 </div>
               </div>
@@ -231,7 +232,74 @@ export default function Checkout() {
                 </div>
               </div>
             </div>
-            <div className="method-payment border"></div>
+            <div className="method-payment border p-6 pt-[50px]">
+              <p className="font-bold text-lg">XÁC NHẬN ĐƠN HÀNG</p>
+              <p className="text-base font-light text-slate-500 ">
+                Hãy xác nhận lần cuối trước khi đặt hàng, bạn có thể thay đổi{" "}
+                <Link to="/cart" className="text-red-400">
+                  ở đây
+                </Link>
+              </p>
+              <div className="mt-5">
+                {/* Item */}
+                <div className="flex justify-between items-center mb-2 bg-[#fcfcfc]">
+                  <div className="w-[96px] h-[123px]">
+                    <img src={ImageProduct} alt="" />
+                  </div>
+                  <Link
+                    to="/product/:product-id"
+                    className="w-[218px] font-semibold"
+                  >
+                    <p>69 Sắc Thái - Giải Phẫu Học Nghệ Thuật</p>
+                  </Link>
+                  <div className="font-bold">
+                    <span>$8.70</span>
+                  </div>
+                  <div className="font-bold">
+                    <span>x1</span>
+                  </div>
+                  <div className="total font-bold">
+                    <p>$8.70</p>
+                  </div>
+                </div>
+                {/* Item */}
+                <div className="flex justify-between items-center mb-2 bg-[#fcfcfc]">
+                  <div className="w-[96px] h-[123px]">
+                    <img src={ImageProduct} alt="" />
+                  </div>
+                  <Link
+                    to="/product/:product-id"
+                    className="w-[218px] font-semibold"
+                  >
+                    <p>69 Sắc Thái - Giải Phẫu Học Nghệ Thuật</p>
+                  </Link>
+                  <div className="font-bold">
+                    <span>$8.70</span>
+                  </div>
+                  <div className="font-bold">
+                    <span>x1</span>
+                  </div>
+                  <div className="total font-bold">
+                    <p>$8.70</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-[20px] bg-[#ebebeb] p-5">
+                <p className="font-bold text-xl">Giá trị đơn hàng</p>
+                <div className="flex justify-between items-center">
+                  <p className="font-base text-slate-500">Giá sản phẩm</p>
+                  <span className="font-bold">$8.70</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="font-base text-slate-500">Giao hàng</p>
+                  <span className="font-bold">GHTK đường bộ: $1.30</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="font-base text-slate-500">Tổng</p>
+                  <span className="font-bold">$10.00</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
