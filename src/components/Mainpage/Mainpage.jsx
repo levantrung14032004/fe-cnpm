@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCartPlus } from "react-icons/fa";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import "./Mainpage.css";
 import ImageProduct from "../../Images/Img_Product/TEMPLATE_1.jpg";
@@ -12,6 +13,21 @@ import tarotKieu from "../../Images/Banner/tarotKieu.jpg";
 import thunhoibong from "../../Images/Banner/thunhoibongvang.jpg";
 
 export default function () {
+  const [allProducts, setAllProducts] = useState([]);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          "http://localhost/WriteResfulAPIPHP/api/product/read.php"
+        );
+        setAllProducts(response.data);
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
     <div className="mb-20">
       <div className="banner mb-8">

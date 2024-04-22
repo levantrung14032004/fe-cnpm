@@ -1,5 +1,6 @@
 import React from "react";
 import { Carousel, Breadcrumb } from "flowbite-react";
+import { useParams, Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { HiHome } from "react-icons/hi";
 import { IoIosArrowForward } from "react-icons/io";
@@ -8,6 +9,8 @@ import "./ContentProduct.css";
 import imageProduct from "../../Images/Img_Product/anh.avif";
 
 export default function ContentProduct() {
+  let params = useParams();
+  console.log(params.productId);
   return (
     <div>
       <div className="content pb-[120px]">

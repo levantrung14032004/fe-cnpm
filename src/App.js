@@ -62,7 +62,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/product/:product-id"
+            path="/product/:productId"
             element={
               <Layout>
                 <ContentProduct />

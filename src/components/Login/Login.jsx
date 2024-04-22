@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
@@ -8,7 +8,6 @@ import { validEmail, validPassword } from "../regex.js";
 export default function Login() {
   const [emailErr, setEmailErr] = useState(false);
   const [pwdError, setPwdError] = useState(false);
-
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
