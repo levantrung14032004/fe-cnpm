@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Sidebar } from "flowbite-react";
+import { Sidebar, Button, Modal } from "flowbite-react";
 import { IoLocation } from "react-icons/io5";
 import { BiSolidCoupon } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import { HiArrowSmLeft, HiUser, HiViewBoards } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { FaTachometerAlt } from "react-icons/fa";
 import "./MyAccount.css";
@@ -15,6 +15,15 @@ export default function MyAccount() {
   const [order, setOrder] = useState(false);
   const [address, setAddress] = useState(false);
   const [infoAccount, setInfoAccount] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  let navigate = useNavigate();
+
+  const handleLogout = () => {
+    setOpenModal(true);
+    localStorage.removeItem("id");
+    localStorage.removeItem("email");
+    navigate("/login");
+  };
 
   return (
     <div>
@@ -83,12 +92,34 @@ export default function MyAccount() {
                 >
                   Tài khoản
                 </Sidebar.Item>
-                <Sidebar.Item href="#" icon={HiArrowSmLeft}>
+                <Sidebar.Item
+                  href="#"
+                  icon={HiArrowSmLeft}
+                  onClick={() => {
+                    setOpenModal(true);
+                  }}
+                >
                   Đăng xuất
                 </Sidebar.Item>
               </Sidebar.ItemGroup>
             </Sidebar.Items>
           </Sidebar>
+          <Modal show={openModal} onClose={() => setOpenModal(false)}>
+            <Modal.Header>Xác nhận đăng xuất</Modal.Header>
+            <Modal.Body>
+              <div className="space-y-6">
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  Quý khách hàng có chắn chắn muốn đăng xuất không?
+                </p>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={handleLogout}>Đăng xuất</Button>
+              <Button color="gray" onClick={() => setOpenModal(false)}>
+                Hủy
+              </Button>
+            </Modal.Footer>
+          </Modal>
           <div className="right ml-10">
             {account && (
               <div>

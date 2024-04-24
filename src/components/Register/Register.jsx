@@ -1,15 +1,21 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Register.css";
-import emailjs from "@emailjs/browser";
 import { validEmail } from "../regex.js";
 
 export default function Register() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatPassWord, setRepeatPassWord] = useState("");
   const [emailErr, setEmailErr] = useState(false);
   const [haveCode, setHaveCode] = useState(false);
   const [code, setCode] = useState("");
   const [codeInEmail, setCodeInEmail] = useState("");
+  const [flag, setFlag] = useState(false);
+  const [flagPass, setFlagPass] = useState(false);
+  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
 
   function generateRandomCode() {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -48,7 +54,6 @@ export default function Register() {
     };
     try {
       await axios.post("https://api.emailjs.com/api/v1.0/email/send", data);
-      setEmail("");
       alert("Email đã được gửi, bạn vui lòng kiểm tra email để tiếp tục");
     } catch (error) {
       console.log(error.message);
@@ -56,8 +61,41 @@ export default function Register() {
   };
 
   const handleSubmitCode = () => {
-    if (code === codeInEmail.trim().toUpperCase()) {
+    if (code === codeInEmail.trim().toUpperCase() && code !== "") {
+      localStorage.removeItem("email");
+      localStorage.setItem("email", email);
       setHaveCode(true);
+      setFlag(false);
+      return;
+    } else {
+      setHaveCode(false);
+    }
+    setFlag(true);
+  };
+
+  const handleRegister = async () => {
+    if (
+      password === "" ||
+      repeatPassWord === "" ||
+      password !== repeatPassWord
+    ) {
+      setFlagPass(true);
+      return;
+    } else {
+      setFlagPass(false);
+
+      const response = await axios.post(
+        "http://localhost/WriteResfulAPIPHP/model/register.php",
+        JSON.stringify({
+          email: localStorage.getItem("email"),
+          password: password,
+        })
+      );
+      if (response.data.success) {
+        navigate("/login");
+      } else {
+        setMessage(response.data.message);
+      }
     }
   };
 
@@ -135,13 +173,55 @@ export default function Register() {
                 Xác nhận
               </button>
             </div>
-            <button
-              type="button"
-              className="h-full w-[150px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 my-10"
-              onClick={handleSubmit}
-            >
-              Đăng Ký
-            </button>
+            {flag && (
+              <p className="font-thin text-red-700">Mã xác thực không đúng</p>
+            )}
+            {haveCode && (
+              <div>
+                <div className="flex mt-10">
+                  <p className="font-thin">Nhập mật khẩu</p>{" "}
+                  <span className="inline text-[red]">*</span>
+                </div>
+                <div className="flex gap-x-7 h-[40px] items-center  w-[300px]">
+                  <input
+                    type="password"
+                    name="password"
+                    id=""
+                    className="outline-none border w-full my-2 px-2 py-2"
+                    placeholder=" Mật khẩu"
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                    value={password}
+                  />
+                </div>
+                <div className="flex mt-5">
+                  <p className="font-thin">Xác nhận lại mật khẩu</p>{" "}
+                  <span className="inline text-[red]">*</span>
+                </div>
+                <div className="flex gap-x-7 h-[40px] items-center  w-[300px]">
+                  <input
+                    type="password"
+                    name="repeatPassword"
+                    id=""
+                    className="outline-none border w-full my-2 px-2 py-2"
+                    placeholder="Nhập lại mật khẩu"
+                    onChange={(e) => {
+                      setRepeatPassWord(e.target.value);
+                    }}
+                    value={repeatPassWord}
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="h-full w-[150px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 my-10"
+                  onClick={handleRegister}
+                >
+                  Đăng Ký
+                </button>
+                <p className="font-thin text-red-600">{message}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

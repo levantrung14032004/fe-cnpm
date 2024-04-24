@@ -20,7 +20,6 @@ export default function Header() {
   const [enable, setEnable] = useState("hidden");
   const [hasproducts, setHasProducts] = useState(true);
   const [openSearch, setOpenSearch] = useState(false);
-  const [isLogin, setLogin] = useState(true);
 
   return (
     <div>
@@ -74,7 +73,9 @@ export default function Header() {
               </div>
             </Link>
 
-            <Link to={`${isLogin ? "/my-account" : "/login"}`}>
+            <Link
+              to={`${localStorage.getItem("id") ? "/my-account" : "/login"}`}
+            >
               <li className="navbar-item px-1 py-[20px]">TÀI KHOẢN CỦA TÔI</li>
             </Link>
           </ul>
@@ -117,7 +118,9 @@ export default function Header() {
               />
             </div>
             {/* User */}
-            <Link to="/login">
+            <Link
+              to={`${localStorage.getItem("id") ? "/my-account" : "/login"}`}
+            >
               <div>
                 <AiOutlineUser />
               </div>

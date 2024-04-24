@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import "./Login.css";
@@ -11,15 +12,30 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState("");
+  let navigate = useNavigate();
 
-  const validate = () => {
+  const handleLogin = async () => {
     if (!validEmail.test(email)) {
       setEmailErr(true);
     }
     if (!validPassword.test(password)) {
       setPwdError(true);
     }
+
+    const response = await axios.post(
+      "http://localhost/WriteResfulAPIPHP/model/login.php",
+      JSON.stringify({ email, password })
+    );
+    console.log(response.data);
+    if (response.data.success) {
+      navigate("/");
+      localStorage.setItem("id", response.data.role_id);
+    } else {
+      setMessage(response.data.message);
+    }
   };
+
   return (
     <div>
       <div className="breadcrumb bg-[#f4f9fc] h-[110px] py-5 ">
@@ -105,12 +121,19 @@ export default function Login() {
           <button
             type="button"
             className="h-full w-[150px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 my-10"
-            onClick={validate}
+            onClick={handleLogin}
           >
             Đăng Nhập
           </button>
-          {emailErr && <p>Your email is invalid</p>}
-          {pwdError && <p>Your password is invalid</p>}
+          {emailErr && (
+            <p className="ont-thin text-red-600">Your email is invalid</p>
+          )}
+          {pwdError && (
+            <p className="ont-thin text-red-600">Your password is invalid</p>
+          )}
+          {message !== "" && (
+            <p className="font-thin text-red-600">{message}</p>
+          )}
         </div>
       </div>
     </div>

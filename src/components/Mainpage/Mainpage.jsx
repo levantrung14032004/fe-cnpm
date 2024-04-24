@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaCartPlus } from "react-icons/fa";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import "./Mainpage.css";
+import { fetchHooks } from "../../Hooks/fetchCustom";
 import ImageProduct from "../../Images/Img_Product/TEMPLATE_1.jpg";
 import leftBanner from "../../Images/Banner/left.webp";
 import rightTopBanner from "../../Images/Banner/rightTop.jpg";
@@ -13,19 +13,21 @@ import tarotKieu from "../../Images/Banner/tarotKieu.jpg";
 import thunhoibong from "../../Images/Banner/thunhoibongvang.jpg";
 
 export default function () {
-  const [allProducts, setAllProducts] = useState([]);
+  const [productVietnam, setProductVietNam] = useState([]);
+  const [productNew, setProductNew] = useState([]);
+  const [productWorld, setProductWorld] = useState([]);
+
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          "http://localhost/WriteResfulAPIPHP/api/product/read.php"
-        );
-        setAllProducts(response.data);
-      } catch (error) {
-        throw new Error(error.message);
+    async function getProductbyCategory(cate_id) {
+      const response = await fetchHooks.fetchProductByCategory(cate_id);
+      if (cate_id === 7) {
+        setProductVietNam(response.data);
+      } else if (cate_id === 8) {
+        setProductWorld(response.data);
       }
     }
-    fetchData();
+    getProductbyCategory(7);
+    getProductbyCategory(8);
   }, []);
 
   return (
@@ -281,14 +283,15 @@ export default function () {
             </button>
           </div>
         </div>
-        <div
+        <Link
+          to="/products"
           className={`flex h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold max-w-80
               hover:bg-slate-900 duration-200 items-center justify-center
                `}
         >
           <FaCartPlus className=" w-5 h-10 px-1" />
           XEM THÊM SẢN PHẨM
-        </div>
+        </Link>
       </div>
       <div className="w-[1170px] m-auto text-center my-20">
         <div className="flex gap-x-10">

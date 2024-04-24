@@ -25,6 +25,20 @@ export default function Products() {
     }
     fetchData();
   }, []);
+
+  // Pagination
+  const itemsPerPage = 12;
+  const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+
+  const renderProduct = (pageNumber, itemsPerPage) => {
+    const startIndex = (pageNumber - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageData = allProducts.slice(startIndex, endIndex);
+    return pageData;
+  };
+
+  const productsInCurrentPage = renderProduct(currentPage, itemsPerPage);
+
   return (
     <div>
       <div className="products pb-[120px]">
@@ -46,21 +60,25 @@ export default function Products() {
                 <CgMenuGridR className="w-[30px] h-[30px]" />
               </div>
               <p className="font-medium text-medium">
-                Hiển thị 1–28 của 119 kết quả
+                Hiển thị {(currentPage - 1) * itemsPerPage + 1}-
+                {(currentPage - 1) * itemsPerPage + 1 + itemsPerPage >
+                allProducts.length + 1
+                  ? allProducts.length + 1
+                  : (currentPage - 1) * itemsPerPage + 1 + itemsPerPage}{" "}
+                của {allProducts.length + 1} kết quả
               </p>
             </div>
             <div className="h-[40px]">
               <select className="focus:ring-0 rounded-sm">
                 <option value="0">Thứ tự mặc định:</option>
-                <option value="1">Theo độ phổ biến</option>
-                <option value="2">Mới nhất</option>
-                <option value="3">Theo giá: từ thấp đến cao</option>
-                <option value="4">Theo giá: từ cao xuống thấp</option>
+                <option value="1">Mới nhất</option>
+                <option value="2">Theo giá: từ thấp đến cao</option>
+                <option value="3">Theo giá: từ cao xuống thấp</option>
               </select>
             </div>
           </div>
           <div className="grid grid-cols-4 gap-x-6 mt-[60px]">
-            {allProducts.map((product, index) => (
+            {productsInCurrentPage.map((product, index) => (
               <Link
                 to={`/product/${product.id}`}
                 key={index}
@@ -91,10 +109,10 @@ export default function Products() {
           </div>
           <div className="flex overflow-x-auto sm:justify-center mt-[30px]">
             <Pagination
-              layout="navigation"
               currentPage={currentPage}
-              totalPages={10}
+              totalPages={totalPages}
               onPageChange={onPageChange}
+              showIcons
             />
           </div>
         </div>

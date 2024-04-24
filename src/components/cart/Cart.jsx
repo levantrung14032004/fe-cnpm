@@ -1,6 +1,5 @@
 import "./cart.css";
 import { Link } from "react-router-dom";
-import img_Product from "../../Images/Img_Product/TEMPLATE_1.jpg";
 import { FaTimes } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
@@ -42,7 +41,7 @@ export default function Cart() {
                   className="product-img w-[120px] object-cover
               "
                 >
-                  <img src={img_Product} alt="Anh san pham" />
+                  <img src={item.thumbnail} alt="Anh san pham" />
                 </div>
                 <div className="product-name w-[280px] font-light">
                   <a href="/#">{item.name}</a>
