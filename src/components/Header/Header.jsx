@@ -1,5 +1,6 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import { Toast } from "flowbite-react";
+import { HiX } from "react-icons/hi";
 import { AiOutlineUser } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { LiaTimesSolid } from "react-icons/lia";
@@ -7,19 +8,37 @@ import { FaLock } from "react-icons/fa";
 import { useState } from "react";
 import { BsCart } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
-import "./header.css";
+import {
+  deleteProduct,
+  unincreaseQuantity,
+  increaseQuantity,
+} from "../../Slice/cartSlice";
+
 import logo from "../../Images/Comi_shop_logo.png";
-import img_Product from "../../Images/Img_Product/TEMPLATE_1.jpg";
+import "./header.css";
 
 export default function Header() {
+  const productInCart = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
+  const [enable, setEnable] = useState("hidden");
+  const [hasproducts, setHasProducts] = useState(true);
+  const [openSearch, setOpenSearch] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState(0);
+
   function handleCloseModal() {
     setEnable("hidden");
   }
 
-  const [enable, setEnable] = useState("hidden");
-  const [hasproducts, setHasProducts] = useState(true);
-  const [openSearch, setOpenSearch] = useState(false);
+  useEffect(() => {
+    let total = 0;
+    productInCart.forEach((item) => {
+      total += parseInt(item.price);
+    });
+    setCurrentPrice(total);
+  }, [productInCart.length]);
 
   return (
     <div>
@@ -43,11 +62,21 @@ export default function Header() {
                 <div className="col-1">
                   <p className="title font-bold">TÁC GIẢ TIÊU BIỂU</p>
                   <ul>
-                    <li className="mt-7">Đặng Ngọc Minh Trang</li>
-                    <li className="mt-7">Đặng Ngọc Minh Trang</li>
-                    <li className="mt-7">Đặng Ngọc Minh Trang</li>
-                    <li className="mt-7">Đặng Ngọc Minh Trang</li>
-                    <li className="mt-7">Đặng Ngọc Minh Trang</li>
+                    <Link to="/author/1">
+                      <li className="mt-7">Đặng Ngọc Minh Trang</li>
+                    </Link>
+                    <Link to="/author/3">
+                      <li className="mt-7">Châu Chặt Chém</li>
+                    </Link>
+                    <Link to="/author/5">
+                      <li className="mt-7">Dương Thạch Thảo (Nie)</li>
+                    </Link>
+                    <Link to="/author/2">
+                      <li className="mt-7">Can Tiểu Hy</li>
+                    </Link>
+                    <Link to="/author/4">
+                      <li className="mt-7">Dương Minh Đức</li>
+                    </Link>
                   </ul>
                 </div>
                 <div className="col-2">
@@ -135,9 +164,9 @@ export default function Header() {
               <BsCart />
               <div
                 className="w-4 h-4 bg-red-500 rounded-full text-white size-2 flex items-center justify-center absolute"
-                style={{ bottom: "6px", right: "22px" }}
+                style={{ bottom: "6px", right: "94px" }}
               >
-                0
+                {productInCart.length}
               </div>
               <p
                 style={{
@@ -145,9 +174,11 @@ export default function Header() {
                   lineHeight: "14px",
                   paddingLeft: "8px",
                   fontWeight: "bold",
+                  width: "100px",
+                  minWidth: "50px",
                 }}
               >
-                0đ
+                {currentPrice}đ
               </p>
             </div>
           </div>
@@ -177,42 +208,48 @@ export default function Header() {
           <div className="mt-10 text-left">
             {hasproducts ? (
               <div>
-                <div className="cart-mini">
+                <div className="cart-mini relative">
+                  {showToast && (
+                    <Toast className="absolute top-10 right-5">
+                      <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
+                        <HiX className="h-5 w-5" />
+                      </div>
+                      <div className="ml-3 text-sm font-normal">
+                        Xóa sản phẩm thành công
+                      </div>
+                      <Toast.Toggle onDismiss={() => setShowToast(false)} />
+                    </Toast>
+                  )}
                   {/* Item */}
-                  <div className="flex justify-between mb-3">
-                    <img className="w-[90px] " src={img_Product} alt="" />
-                    <div className="w-[180px] ml-[-30px]">
-                      <p className="text-sm text-slate-700">
-                        [Đặt Trước] Bad Luck Tập 7 - Phổ thông
-                      </p>
-                      <p>(x1)</p>
-                      <p>78,000₫</p>
+                  {productInCart.map((product) => (
+                    <div className="flex justify-between mb-3">
+                      <img
+                        className="w-[90px] "
+                        src={product.thumbnail}
+                        alt=""
+                      />
+                      <div className="w-[180px] ml-[-30px]">
+                        <p className="text-sm text-slate-700">{product.name}</p>
+                        <p>(x{product.quantity})</p>
+                        <p>{product.price * product.quantity}₫</p>
+                      </div>
+                      <div
+                        className="w-3 h-3 border border-current flex justify-center items-center hover:border-orange-600 hover:cursor-pointer"
+                        onClick={() => {
+                          dispatch(deleteProduct(product));
+                          setShowToast(true);
+                        }}
+                      >
+                        <LiaTimesSolid />
+                      </div>
                     </div>
-                    <div className="w-3 h-3 border border-current flex justify-center items-center hover:border-orange-600 hover:cursor-pointer">
-                      <LiaTimesSolid />
-                    </div>
-                  </div>
-
-                  {/* Item */}
-                  <div className="flex justify-between">
-                    <img className="w-[90px] " src={img_Product} alt="" />
-                    <div className="w-[180px] ml-[-30px]">
-                      <p className="text-sm text-slate-700">
-                        [Đặt Trước] Bad Luck Tập 7 - Phổ thông
-                      </p>
-                      <p>(x1)</p>
-                      <p>78,000₫</p>
-                    </div>
-                    <div className="w-3 h-3 border border-current flex justify-center items-center hover:border-orange-600 hover:cursor-pointer">
-                      <LiaTimesSolid />
-                    </div>
-                  </div>
+                  ))}
                 </div>
                 <div className="mt-[80px]">
-                  <p>Giá sản phẩm: 358,000₫</p>
+                  <p>Giá sản phẩm: {currentPrice}₫</p>
                   <div className="">
                     <Link
-                      to="/checkout"
+                      to={localStorage.getItem("id") ? "/checkout" : "/login"}
                       className="w-full h-[46px] bg-orange-500 text-white flex items-center justify-center mt-5 rounded-sm hover:bg-slate-400 hover:cursor-pointer duration-75 font-medium"
                     >
                       <FaLock />

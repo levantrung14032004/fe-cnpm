@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { FaCartPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "./Mainpage.css";
 import { fetchHooks } from "../../Hooks/fetchCustom";
-import ImageProduct from "../../Images/Img_Product/TEMPLATE_1.jpg";
 import leftBanner from "../../Images/Banner/left.webp";
 import rightTopBanner from "../../Images/Banner/rightTop.jpg";
 import leftBottomBanner from "../../Images/Banner/leftbottom.jpg";
@@ -16,18 +16,37 @@ export default function () {
   const [productVietnam, setProductVietNam] = useState([]);
   const [productNew, setProductNew] = useState([]);
   const [productWorld, setProductWorld] = useState([]);
+  const [modeProductVietNam, setModeProductVietNam] = useState([]);
+
+  useEffect(() => {
+    const modeProductVietNam = [...productVietnam, ...productNew.slice(6, 8)];
+    setModeProductVietNam(modeProductVietNam);
+  }, [productVietnam]);
 
   useEffect(() => {
     async function getProductbyCategory(cate_id) {
       const response = await fetchHooks.fetchProductByCategory(cate_id);
       if (cate_id === 7) {
         setProductVietNam(response.data);
-      } else if (cate_id === 8) {
+      } else if (cate_id === 6) {
         setProductWorld(response.data);
       }
     }
     getProductbyCategory(7);
-    getProductbyCategory(8);
+    getProductbyCategory(6);
+  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          "http://localhost/WriteResfulAPIPHP/api/product/read.php"
+        );
+        setProductNew(response.data);
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    }
+    fetchData();
   }, []);
 
   return (
@@ -85,207 +104,38 @@ export default function () {
         </h1>
         <h1 className="text-2xl font-bold">Sản phẩm mới</h1>
         <div className="grid grid-rows-2 grid-cols-4 gap-x-6 mt-[30px]">
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+          {productNew
+            ? productNew.slice(0, 8).map((product) => (
+                <Link
+                  to={`/product/${product.id}`}
+                  key={product.id}
+                  className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
+                >
+                  <div className="h-[350px] object-cover">
+                    <img src={product.thumbnail} alt="" />
+                  </div>
+                  <div className="name duration-100">
+                    <p className="mt-[40px] font-normal w-full mb-5">
+                      {product.title}
+                    </p>
+                    <span className="font-medium my-4">{product.price}₫</span>
+                  </div>
+                  <button
+                    type="button"
+                    className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
               hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
                `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
+                  >
+                    <FaCartPlus className=" w-5 h-10 px-1" />
+                    THÊM VÀO GIỎ HÀNG
+                  </button>
+                </Link>
+              ))
+            : null}
         </div>
         <Link
           to="/products"
-          className={`flex h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold max-w-80
+          className={`flex h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold max-w-80 mt-5
               hover:bg-slate-900 duration-200 items-center justify-center
                `}
         >
@@ -333,190 +183,44 @@ export default function () {
           Các truyện tranh của tác giả Việt Nam
         </h1>
         <div className="grid grid-rows-2 grid-cols-4 gap-x-6 mt-[30px]">
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+          {modeProductVietNam
+            ? modeProductVietNam.map((product) => (
+                <Link
+                  to={`/product/${product.id}`}
+                  key={product.id}
+                  className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
+                >
+                  <div className="h-[350px] object-cover">
+                    <img src={product.thumbnail} alt="" />
+                  </div>
+                  <div className="name duration-100">
+                    <p className="mt-[40px] font-normal w-full mb-5">
+                      {product.title}
+                    </p>
+                    <span className="font-medium my-4">{product.price}₫</span>
+                  </div>
+                  <button
+                    type="button"
+                    className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
               hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
                `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
+                  >
+                    <FaCartPlus className=" w-5 h-10 px-1" />
+                    THÊM VÀO GIỎ HÀNG
+                  </button>
+                </Link>
+              ))
+            : null}
         </div>
-        <div
+        <Link
+          to="/vietnam"
           className={`flex h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold max-w-80
-              hover:bg-slate-900 duration-200 items-center justify-center
+              hover:bg-slate-900 duration-200 items-center justify-center mt-5
                `}
         >
-          <FaCartPlus className=" w-5 h-10 px-1" />
+          <FaCartPlus className=" w-5 h-10 px-1 " />
           XEM THÊM SẢN PHẨM
-        </div>
+        </Link>
       </div>
       <div
         className="w-full h-[400px] my-24"
@@ -535,93 +239,44 @@ export default function () {
         </h1>
         <div className="grid grid-rows-1 grid-cols-4 gap-x-6 mt-[30px]">
           {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
-
-          {/* Product item */}
-          <div className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md">
-            <div className="h-[350px] object-cover">
-              <img src={ImageProduct} alt="" />
-            </div>
-            <div className="name duration-100">
-              <p className="mt-[40px] font-normal w-full mb-5">
-                Truyện Ma Sau 6 Giờ – Tập 2 (Tái bản)
-              </p>
-              <span className="font-medium my-4">145,000₫ – 350,000₫</span>
-            </div>
-            <button
-              type="button"
-              className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-              hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-               `}
-            >
-              <FaCartPlus className=" w-5 h-10 px-1" />
-              THÊM VÀO GIỎ HÀNG
-            </button>
-          </div>
+          {productWorld
+            ? productWorld.slice(0, 4).map((product) => (
+                <Link
+                  to={`/product/${product.id}`}
+                  key={product.id}
+                  className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
+                >
+                  <div className="h-[350px] object-cover">
+                    <img src={product.thumbnail} alt="" />
+                  </div>
+                  <div className="name duration-100">
+                    <p className="mt-[40px] font-normal w-full mb-5">
+                      {product.title}
+                    </p>
+                    <span className="font-medium my-4">{product.price}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+                    hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
+                    `}
+                  >
+                    <FaCartPlus className=" w-5 h-10 px-1" />
+                    THÊM VÀO GIỎ HÀNG
+                  </button>
+                </Link>
+              ))
+            : null}
         </div>
+        <Link
+          to="/"
+          className={`flex h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold max-w-80
+              hover:bg-slate-900 duration-200 items-center justify-center mt-5
+               `}
+        >
+          <FaCartPlus className=" w-5 h-10 px-1 " />
+          XEM THÊM SẢN PHẨM
+        </Link>
       </div>
     </div>
   );

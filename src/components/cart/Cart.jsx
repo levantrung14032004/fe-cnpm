@@ -1,15 +1,23 @@
-import "./cart.css";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Toast } from "flowbite-react";
+import { HiX } from "react-icons/hi";
 import { FaTimes } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { CiShoppingCart } from "react-icons/ci";
 import { FaLock } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { increaseQuantity, unincreaseQuantity } from "../../Slice/cartSlice";
+import {
+  increaseQuantity,
+  unincreaseQuantity,
+  deleteProduct,
+} from "../../Slice/cartSlice";
+import "./cart.css";
 
 export default function Cart() {
   const itemsOfCart = useSelector((state) => state.cart.items);
+  const [showToast, setShowToast] = useState(false);
 
   const dispatch = useDispatch();
   const increaseItem = (item) => {
@@ -21,7 +29,18 @@ export default function Cart() {
   };
   return (
     <div>
-      <div className="cart">
+      <div className="cart relative">
+        {showToast && (
+          <Toast className="absolute top-[-200px] right-5">
+            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
+              <HiX className="h-5 w-5" />
+            </div>
+            <div className="ml-3 text-sm font-normal">
+              Xóa sản phẩm thành công
+            </div>
+            <Toast.Toggle onDismiss={() => setShowToast(false)} />
+          </Toast>
+        )}
         <div className="breadcrumb bg-[#f4f9fc] h-20 flex items-center justify-center">
           <a href="/" className="px-1">
             Trang Chủ
@@ -65,7 +84,13 @@ export default function Cart() {
                   </div>
                 </div>
                 <div className="product-total">Giá sản phẩm: {item.total}₫</div>
-                <div className="product-cancel border p-1 mr-5">
+                <div
+                  className="product-cancel border p-1 mr-5"
+                  onClick={() => {
+                    dispatch(deleteProduct(item));
+                    setShowToast(true);
+                  }}
+                >
                   <FaTimes />
                 </div>
               </div>
@@ -118,7 +143,7 @@ export default function Cart() {
                   <p className="text-thin text-sm">Tổng</p>
                   <span className="inline-block font-bold">78,000₫</span>
                 </div>
-                <Link to="/checkout">
+                <Link to={localStorage.getItem("id") ? "/checkout" : "/login"}>
                   <button
                     type="button"
                     className="h-full w-[300px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 mt-5 flex items-center justify-center "

@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { FaCartPlus } from "react-icons/fa";
 import "./Checkout.css";
-import ImageProduct from "../../Images/Img_Product/TEMPLATE_1.jpg";
 
 export default function Checkout() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [note, setNote] = useState("");
   const [idProvince, setIdProvince] = useState(null);
   const [idDistrict, setIdDistrict] = useState(null);
   const [dataProvince, setdataProvince] = useState([]);
   const [dataDistrict, setdataDistrict] = useState([]);
   const [dataWards, setdataWards] = useState([]);
+  const [detailAddress, setdetailAddress] = useState("");
+
+  const productInCart = useSelector((state) => state.cart.items);
 
   useEffect(() => {
     axios
@@ -44,6 +53,22 @@ export default function Checkout() {
       });
   }, [idDistrict]);
 
+  const handleAcceptOrder = () => {
+    async function sendOrder() {
+      const res = await axios.post(
+        "",
+        JSON.stringify({
+          fullname: `${firstName} ${lastName}`,
+          phoneNumber: phoneNumber,
+          email: email,
+          address: `${detailAddress}`,
+          products: productInCart,
+        })
+      );
+    }
+    sendOrder();
+  };
+
   return (
     <div>
       <div className="breadcrumb bg-[#f4f9fc] h-[110px] py-5 ">
@@ -62,7 +87,7 @@ export default function Checkout() {
       <div className="w-[1170px] m-auto">
         <div className="checkout">
           <div></div>
-          <div className="grid grid-cols-2 gap-x-[30px]">
+          <div className="grid grid-cols-2 gap-x-[30px] mt-20">
             <div className="location border p-6  pt-[50px]">
               <p className="font-bold text-lg">THÔNG TIN GIAO HÀNG</p>
               <p className="text-base font-light text-slate-500 ">
@@ -81,6 +106,10 @@ export default function Checkout() {
                     id="name"
                     placeholder="Nhập tên"
                     className="h-[30px] border-slate-200 focus:ring-0 w-[230px] "
+                    onChange={(e) => {
+                      setLastName(e.target.value);
+                    }}
+                    value={lastName}
                     required
                   />
                 </div>
@@ -95,6 +124,10 @@ export default function Checkout() {
                     id="name"
                     placeholder="Nhập họ"
                     className="h-[30px] border-slate-200 focus:ring-0 w-[230px] "
+                    onChange={(e) => {
+                      setFirstName(e.target.value);
+                    }}
+                    value={firstName}
                     required
                   />
                 </div>
@@ -112,6 +145,10 @@ export default function Checkout() {
                     id="phoneNumber"
                     placeholder="Số điện thoại"
                     className="h-[30px] border-slate-200 focus:ring-0 w-[230px] "
+                    onChange={(e) => {
+                      setPhoneNumber(e.target.value);
+                    }}
+                    value={phoneNumber}
                     required
                   />
                 </div>
@@ -126,6 +163,10 @@ export default function Checkout() {
                     id="email"
                     placeholder="Địa chỉ Email"
                     className="h-[30px] border-slate-200 focus:ring-0 w-[230px] "
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                    value={email}
                     required
                   />
                 </div>
@@ -213,6 +254,10 @@ export default function Checkout() {
                       id="address"
                       className="block h-[40px] border-slate-200 focus:ring-0 w-[230px] mt-1"
                       placeholder="địa chỉ chi tiết"
+                      onChange={(e) => {
+                        setdetailAddress(e.target.value);
+                      }}
+                      value={detailAddress}
                     />
                   </div>
                 </div>
@@ -228,6 +273,10 @@ export default function Checkout() {
                     rows="10"
                     placeholder="Ghi chú về đơn hàng, ví dụ: Làm ơn giao hàng ngoài giờ hành chính "
                     className="resize w-[520px] max-w-[520px] min-w-[420px] focus:ring-0"
+                    onChange={(e) => {
+                      setNote(e.target.value);
+                    }}
+                    value={note}
                   ></textarea>
                 </div>
               </div>
@@ -241,48 +290,28 @@ export default function Checkout() {
                 </Link>
               </p>
               <div className="mt-5">
-                {/* Item */}
-                <div className="flex justify-between items-center mb-2 bg-[#fcfcfc]">
-                  <div className="w-[96px] h-[123px]">
-                    <img src={ImageProduct} alt="" />
+                {productInCart.map((product) => (
+                  <div className="flex justify-between items-center mb-2 bg-[#fcfcfc] pr-2">
+                    <div className="w-[96px] h-[123px]">
+                      <img src={product.thumbnail} alt="" />
+                    </div>
+                    <Link
+                      to="/product/:product-id"
+                      className="w-[218px] font-semibold"
+                    >
+                      <p>{product.name}</p>
+                    </Link>
+                    <div className="font-bold">
+                      <span>{parseInt(product.price)}đ</span>
+                    </div>
+                    <div className="font-bold">
+                      <span>x{product.quantity}</span>
+                    </div>
+                    <div className="total font-bold">
+                      <p>{product.price * product.quantity}đ</p>
+                    </div>
                   </div>
-                  <Link
-                    to="/product/:product-id"
-                    className="w-[218px] font-semibold"
-                  >
-                    <p>69 Sắc Thái - Giải Phẫu Học Nghệ Thuật</p>
-                  </Link>
-                  <div className="font-bold">
-                    <span>$8.70</span>
-                  </div>
-                  <div className="font-bold">
-                    <span>x1</span>
-                  </div>
-                  <div className="total font-bold">
-                    <p>$8.70</p>
-                  </div>
-                </div>
-                {/* Item */}
-                <div className="flex justify-between items-center mb-2 bg-[#fcfcfc]">
-                  <div className="w-[96px] h-[123px]">
-                    <img src={ImageProduct} alt="" />
-                  </div>
-                  <Link
-                    to="/product/:product-id"
-                    className="w-[218px] font-semibold"
-                  >
-                    <p>69 Sắc Thái - Giải Phẫu Học Nghệ Thuật</p>
-                  </Link>
-                  <div className="font-bold">
-                    <span>$8.70</span>
-                  </div>
-                  <div className="font-bold">
-                    <span>x1</span>
-                  </div>
-                  <div className="total font-bold">
-                    <p>$8.70</p>
-                  </div>
-                </div>
+                ))}
               </div>
               <div className="mt-[20px] bg-[#ebebeb] p-5">
                 <p className="font-bold text-xl">Giá trị đơn hàng</p>
@@ -300,6 +329,18 @@ export default function Checkout() {
                 </div>
               </div>
             </div>
+          </div>
+          <div>
+            <button
+              type="button"
+              className={`h-[40px] w-[180px] m-auto bg-orange-500 text-white p-2 font-bold
+                    hover:bg-slate-900 duration-200 items-center justify-center flex my-20
+                    `}
+              onClick={handleAcceptOrder}
+            >
+              <FaCartPlus className=" w-5 h-10 px-1" />
+              ĐẶT HÀNG
+            </button>
           </div>
         </div>
       </div>

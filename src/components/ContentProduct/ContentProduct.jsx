@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Carousel, Breadcrumb } from "flowbite-react";
+import { Carousel, Breadcrumb, Toast } from "flowbite-react";
+import { HiCheck } from "react-icons/hi";
 import { useParams, Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { HiHome } from "react-icons/hi";
@@ -11,6 +12,7 @@ import { addProduct } from "../../Slice/cartSlice";
 import "./ContentProduct.css";
 
 export default function ContentProduct() {
+  const [showToast, setShowToast] = useState(false);
   const dispatch = useDispatch();
   const itemsInCart = useSelector((state) => state.cart.items);
   let { productId } = useParams();
@@ -30,7 +32,18 @@ export default function ContentProduct() {
   }, [productId]);
 
   return (
-    <div>
+    <div className="relative">
+      {showToast && (
+        <Toast className="absolute top-10 right-5">
+          <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200 ">
+            <HiCheck className="h-5 w-5" />
+          </div>
+          <div className="ml-3 text-sm font-normal">
+            Sản phẩm được thêm vào giỏ hàng thành công
+          </div>
+          <Toast.Toggle onDismiss={() => setShowToast(false)} />
+        </Toast>
+      )}
       <div className="content pb-[120px]">
         <Breadcrumb
           aria-label="Solid background breadcrumb example"
@@ -74,13 +87,22 @@ export default function ContentProduct() {
             </p>
             <div className="flex py-[40px] gap-5">
               <div className="product-quantity border-slate-300 flex border justify-center items-center py-1 px-1">
-                <div className="decrease p-1">
+                <div
+                  className="decrease p-1 hover:cursor-pointer"
+                  onClick={() => {
+                    if (quantity <= 1) {
+                      setQuantity(1);
+                    } else {
+                      setQuantity((quantity) => quantity - 1);
+                    }
+                  }}
+                >
                   <IoIosArrowBack />
                 </div>
                 <div className="quantity px-3">{quantity}</div>
                 <div
-                  className="increase p-1"
-                  onClick={(quantity) => quantity + 1}
+                  className="increase p-1 hover:cursor-pointer"
+                  onClick={() => setQuantity((quantity) => quantity + 1)}
                 >
                   <IoIosArrowForward />
                 </div>
@@ -100,6 +122,7 @@ export default function ContentProduct() {
                       })
                     );
                   }
+                  setShowToast(true);
                 }}
               >
                 <FaCartShopping /> <p>Thêm vào giỏ hàng</p>

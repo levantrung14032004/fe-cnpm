@@ -48,8 +48,12 @@ export default function Products() {
         >
           <div className="w-[1170px] m-auto">
             <div className="flex justify-center items-center">
-              <Breadcrumb.Item href="/">Trang Chủ</Breadcrumb.Item>
-              <Breadcrumb.Item href="/products">Sản phẩm </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <Link to="/">Trang Chủ</Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <Link to="/products">Sản phẩm</Link>{" "}
+              </Breadcrumb.Item>
             </div>
           </div>
         </Breadcrumb>
