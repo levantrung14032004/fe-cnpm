@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Toast } from "flowbite-react";
 import { HiX } from "react-icons/hi";
@@ -18,6 +18,7 @@ import "./cart.css";
 export default function Cart() {
   const itemsOfCart = useSelector((state) => state.cart.items);
   const [showToast, setShowToast] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState(0);
 
   const dispatch = useDispatch();
   const increaseItem = (item) => {
@@ -27,6 +28,13 @@ export default function Cart() {
   const decreaseItem = (item) => {
     dispatch(unincreaseQuantity(item));
   };
+  useEffect(() => {
+    let total = 0;
+    itemsOfCart.forEach((item) => {
+      total += parseInt(item.price * item.quantity);
+    });
+    setCurrentPrice(total);
+  }, [itemsOfCart]);
   return (
     <div>
       <div className="cart relative">
@@ -131,7 +139,9 @@ export default function Cart() {
                 <p className="font-bold mb-7">Cộng giỏ hàng</p>
                 <div className="flex justify-between items-center">
                   <p className="text-thin text-sm">Tạm tính</p>
-                  <span className="inline-block font-bold">78,000₫</span>
+                  <span className="inline-block font-bold">
+                    {currentPrice}₫
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="text-thin text-sm">Giao hàng</p>
@@ -141,7 +151,9 @@ export default function Cart() {
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="text-thin text-sm">Tổng</p>
-                  <span className="inline-block font-bold">78,000₫</span>
+                  <span className="inline-block font-bold">
+                    {currentPrice}₫
+                  </span>
                 </div>
                 <Link to={localStorage.getItem("id") ? "/checkout" : "/login"}>
                   <button

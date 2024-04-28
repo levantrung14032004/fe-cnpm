@@ -10,11 +10,7 @@ import { BsCart } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  deleteProduct,
-  unincreaseQuantity,
-  increaseQuantity,
-} from "../../Slice/cartSlice";
+import { deleteProduct } from "../../Slice/cartSlice";
 
 import logo from "../../Images/Comi_shop_logo.png";
 import "./header.css";
@@ -35,10 +31,10 @@ export default function Header() {
   useEffect(() => {
     let total = 0;
     productInCart.forEach((item) => {
-      total += parseInt(item.price);
+      total += parseInt(item.price * item.quantity);
     });
     setCurrentPrice(total);
-  }, [productInCart.length]);
+  }, [productInCart]);
 
   return (
     <div>
@@ -166,7 +162,11 @@ export default function Header() {
                 className="w-4 h-4 bg-red-500 rounded-full text-white size-2 flex items-center justify-center absolute"
                 style={{ bottom: "6px", right: "94px" }}
               >
-                {productInCart.length}
+                {(() => {
+                  let count = 0;
+                  productInCart.forEach((item) => (count += item.quantity));
+                  return count;
+                })()}
               </div>
               <p
                 style={{

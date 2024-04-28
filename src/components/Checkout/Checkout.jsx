@@ -13,10 +13,16 @@ export default function Checkout() {
   const [note, setNote] = useState("");
   const [idProvince, setIdProvince] = useState(null);
   const [idDistrict, setIdDistrict] = useState(null);
+  const [idWard, setIdWard] = useState(null);
   const [dataProvince, setdataProvince] = useState([]);
   const [dataDistrict, setdataDistrict] = useState([]);
+  const [dataWardName, setdataWardName] = useState("");
+  const [dataProvinceName, setdataProvinceName] = useState("");
+  const [dataDistrictName, setdataDistrictName] = useState("");
   const [dataWards, setdataWards] = useState([]);
   const [detailAddress, setdetailAddress] = useState("");
+  const [shipFee, setShipFee] = useState(0);
+  const [currentPrice, setCurrentPrice] = useState(0);
 
   const productInCart = useSelector((state) => state.cart.items);
 
@@ -36,6 +42,8 @@ export default function Checkout() {
       .get(` https://esgoo.net/api-tinhthanh/2/${idProvince}.htm`)
       .then((res) => {
         setdataDistrict(res.data.data);
+        setdataProvinceName(res.data.data_name);
+        setShipFee(idProvince === "79" ? 19000 : 35000);
       })
       .catch((err) => {
         console.error(err);
@@ -47,6 +55,7 @@ export default function Checkout() {
       .get(`https://esgoo.net/api-tinhthanh/3/${idDistrict}.htm`)
       .then((res) => {
         setdataWards(res.data.data);
+        setdataDistrictName(res.data.data_name);
       })
       .catch((err) => {
         console.error(err);
@@ -56,18 +65,37 @@ export default function Checkout() {
   const handleAcceptOrder = () => {
     async function sendOrder() {
       const res = await axios.post(
-        "",
+        "http://localhost/WriteResfulAPIPHP/model/order.php",
         JSON.stringify({
+          userId: localStorage.getItem("id"),
           fullname: `${firstName} ${lastName}`,
           phoneNumber: phoneNumber,
           email: email,
-          address: `${detailAddress}`,
+          address: `${detailAddress}, ${dataWardName}, ${dataDistrictName}, ${dataProvinceName}`,
           products: productInCart,
+          note: note,
+          shipFee: shipFee,
+          total: currentPrice,
         })
       );
+      console.log(res.data);
     }
     sendOrder();
   };
+
+  useEffect(() => {
+    const result = dataWards.find((item) => item.id === idWard);
+
+    setdataWardName(result ? result.name : undefined);
+  }, [idWard]);
+
+  useEffect(() => {
+    let total = 0;
+    productInCart.forEach((item) => {
+      total += parseInt(item.price * item.quantity);
+    });
+    setCurrentPrice(total);
+  }, [productInCart]);
 
   return (
     <div>
@@ -181,7 +209,6 @@ export default function Checkout() {
                     <select
                       id="city"
                       onChange={(e) => {
-                        console.log(e.target.value);
                         setIdProvince(e.target.value);
                       }}
                       className="block h-[40px] border-slate-200 focus:ring-0 w-[230px] mt-1"
@@ -231,11 +258,14 @@ export default function Checkout() {
                     <select
                       id="ward"
                       className="block h-[40px] border-slate-200 focus:ring-0 w-[230px] mt-1"
+                      onChange={(e) => {
+                        setIdWard(e.target.value);
+                      }}
                     >
                       <option value="" defaultValue>
                         Chọn phường xã
                       </option>
-                      {dataWards.map((item, index) => (
+                      {dataWards.map((item) => (
                         <option key={item.id} value={item.id}>
                           {item.full_name}
                         </option>
@@ -317,15 +347,15 @@ export default function Checkout() {
                 <p className="font-bold text-xl">Giá trị đơn hàng</p>
                 <div className="flex justify-between items-center">
                   <p className="font-base text-slate-500">Giá sản phẩm</p>
-                  <span className="font-bold">$8.70</span>
+                  <span className="font-bold">{currentPrice}đ</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="font-base text-slate-500">Giao hàng</p>
-                  <span className="font-bold">GHTK đường bộ: $1.30</span>
+                  <span className="font-bold">GHTK đường bộ: {shipFee}đ</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="font-base text-slate-500">Tổng</p>
-                  <span className="font-bold">$10.00</span>
+                  <span className="font-bold">{currentPrice + shipFee}đ</span>
                 </div>
               </div>
             </div>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from "../../Slice/cartSlice";
 import { Link } from "react-router-dom";
 import { Pagination } from "flowbite-react";
 import { CgMenuGridR } from "react-icons/cg";
@@ -10,21 +12,60 @@ import { Breadcrumb } from "flowbite-react";
 export default function Products() {
   const [currentPage, setCurrentPage] = useState(1);
   const onPageChange = (page) => setCurrentPage(page);
-
+  const [fillterValue, setFillterValue] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
   const [allProducts, setAllProducts] = useState([]);
+  const productInCart = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          "http://localhost/WriteResfulAPIPHP/api/product/read.php"
-        );
-        setAllProducts(response.data);
-      } catch (error) {
-        throw new Error(error.message);
-      }
+    if (!isMounted) {
+      fetchData();
+      setIsMounted(true);
     }
-    fetchData();
-  }, []);
+  }, [isMounted]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost/WriteResfulAPIPHP/api/product/read.php"
+      );
+      setAllProducts(response.data);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+  useEffect(() => {
+    const handleFillProduct = () => {
+      let apiLink = "";
+      switch (fillterValue) {
+        case "1":
+          apiLink = "http://localhost/WriteResfulAPIPHP/api/product/read.php";
+          break;
+        case "2":
+          apiLink =
+            "http://localhost:80/WriteResfulAPIPHP/api/product/readHighToLow.php";
+          break;
+        case "3":
+          apiLink =
+            "http://localhost/WriteResfulAPIPHP/api/product/readLowToHigh.php";
+          break;
+        default:
+          apiLink = "http://localhost/WriteResfulAPIPHP/api/product/read.php";
+          break;
+      }
+      async function fetchData() {
+        try {
+          const response = await axios.get(apiLink);
+          setAllProducts(response.data);
+        } catch (error) {
+          throw new Error(error.message);
+        }
+      }
+      fetchData();
+    };
+    handleFillProduct();
+  }, [fillterValue]);
 
   // Pagination
   const itemsPerPage = 12;
@@ -38,6 +79,15 @@ export default function Products() {
   };
 
   const productsInCurrentPage = renderProduct(currentPage, itemsPerPage);
+
+  const formatNumber = (number) => {
+    const formatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    let numFormat = formatter.format(number);
+    return numFormat;
+  };
 
   return (
     <div>
@@ -73,7 +123,12 @@ export default function Products() {
               </p>
             </div>
             <div className="h-[40px]">
-              <select className="focus:ring-0 rounded-sm">
+              <select
+                className="focus:ring-0 rounded-sm"
+                onChange={(e) => {
+                  setFillterValue(e.target.value);
+                }}
+              >
                 <option value="0">Thứ tự mặc định:</option>
                 <option value="1">Mới nhất</option>
                 <option value="2">Theo giá: từ thấp đến cao</option>
@@ -81,7 +136,7 @@ export default function Products() {
               </select>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-x-6 mt-[60px]">
+          <div className="grid grid-cols-4 gap-x-6 mt-[60px] gap-y-2">
             {productsInCurrentPage.map((product, index) => (
               <Link
                 to={`/product/${product.id}`}
@@ -91,11 +146,13 @@ export default function Products() {
                 <div className="h-[350px] object-cover">
                   <img src={product.thumbnail} alt="" />
                 </div>
-                <div className="name duration-100">
+                <div className="name duration-100 p-2">
                   <p className="mt-[40px] font-normal w-full mb-5">
                     {product.title}
                   </p>
-                  <span className="font-medium my-4">{product.price}</span>
+                  <span className="font-medium my-4">
+                    {formatNumber(product.price)}
+                  </span>
                 </div>
                 <Link to="/cart">
                   <button
@@ -103,6 +160,18 @@ export default function Products() {
                     className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
                   hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
                   `}
+                    onClick={() => {
+                      dispatch(
+                        addProduct({
+                          id: product.id,
+                          name: product.title,
+                          price: product.price,
+                          quantity: 1,
+                          total: product.price * 1,
+                          thumbnail: product.thumbnail,
+                        })
+                      );
+                    }}
                   >
                     <FaCartPlus className=" w-5 h-10 px-1" />
                     THÊM VÀO GIỎ HÀNG
