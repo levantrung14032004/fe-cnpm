@@ -15,6 +15,7 @@ import Mainpage from "./components/Mainpage/Mainpage.jsx";
 import Layout from "./components/Layout/Layout.js";
 import Products from "./components/Products/Products.jsx";
 import Payment from "./components/Checkout/Checkout.jsx";
+import SearchProduct from "./components/SearchProduct/SearchProduct.jsx";
 
 function App() {
   return (
@@ -71,18 +72,10 @@ function App() {
             }
           ></Route>
           <Route
-            path="/search"
+            path="/search/:valueSearch"
             element={
               <Layout>
-                <Mainpage />
-              </Layout>
-            }
-          ></Route>
-          <Route
-            path="/search/:value-search"
-            element={
-              <Layout>
-                <Mainpage />
+                <SearchProduct />
               </Layout>
             }
           ></Route>

@@ -213,7 +213,7 @@ export default function () {
             : null}
         </div>
         <Link
-          to="/vietnam"
+          to="/"
           className={`flex h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold max-w-80
               hover:bg-slate-900 duration-200 items-center justify-center mt-5
                `}

@@ -7,9 +7,8 @@ import { LiaTimesSolid } from "react-icons/lia";
 import { FaLock } from "react-icons/fa";
 import { useState } from "react";
 import { BsCart } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-
 import { deleteProduct } from "../../Slice/cartSlice";
 
 import logo from "../../Images/Comi_shop_logo.png";
@@ -23,6 +22,8 @@ export default function Header() {
   const [openSearch, setOpenSearch] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [currentPrice, setCurrentPrice] = useState(0);
+  const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
 
   function handleCloseModal() {
     setEnable("hidden");
@@ -35,6 +36,18 @@ export default function Header() {
     });
     setCurrentPrice(total);
   }, [productInCart]);
+
+  const handleSearchProduct = () => {
+    let valueSeach = searchValue;
+    if (valueSeach == "") {
+      setOpenSearch(false);
+    } else {
+      valueSeach = searchValue.trim().toLowerCase().replaceAll(" ", "-");
+      navigate(`/search/${valueSeach}`);
+      setOpenSearch(false);
+      setSearchValue("");
+    }
+  };
 
   return (
     <div>
@@ -124,16 +137,23 @@ export default function Header() {
               name=""
               id=""
               placeholder="Nhập thông tin tìm kiếm..."
+              onChange={(e) => {
+                setSearchValue(e.target.value);
+              }}
+              value={searchValue}
             />
             {/* Btn search */}
             <div
               style={{
                 backgroundColor: "white",
-                padding: "4px",
+                paddingBottom: "8px",
               }}
               className="search-icon"
               onClick={() => {
-                !openSearch ? setOpenSearch(true) : setOpenSearch(false);
+                handleSearchProduct();
+              }}
+              onMouseOver={() => {
+                setOpenSearch(true);
               }}
             >
               <AiOutlineSearch

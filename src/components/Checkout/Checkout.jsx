@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { Spinner, Toast } from "flowbite-react";
+import { HiCheck } from "react-icons/hi";
+import { useSelector, useDispatch } from "react-redux";
+import { clearCart } from "../../Slice/cartSlice";
 import { FaCartPlus } from "react-icons/fa";
 import "./Checkout.css";
 
@@ -23,6 +26,11 @@ export default function Checkout() {
   const [detailAddress, setdetailAddress] = useState("");
   const [shipFee, setShipFee] = useState(0);
   const [currentPrice, setCurrentPrice] = useState(0);
+  const [isLoad, setLoad] = useState(false);
+  const [isToast, setToast] = useState(false);
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const productInCart = useSelector((state) => state.cart.items);
 
@@ -43,7 +51,6 @@ export default function Checkout() {
       .then((res) => {
         setdataDistrict(res.data.data);
         setdataProvinceName(res.data.data_name);
-        setShipFee(idProvince === "79" ? 19000 : 35000);
       })
       .catch((err) => {
         console.error(err);
@@ -56,6 +63,7 @@ export default function Checkout() {
       .then((res) => {
         setdataWards(res.data.data);
         setdataDistrictName(res.data.data_name);
+        setShipFee(idProvince === "79" ? 19000 : 35000);
       })
       .catch((err) => {
         console.error(err);
@@ -65,7 +73,7 @@ export default function Checkout() {
   const handleAcceptOrder = () => {
     async function sendOrder() {
       const res = await axios.post(
-        "http://localhost/WriteResfulAPIPHP/model/order.php",
+        "http://localhost/WriteResfulAPIPHP/admin/order/addOrder.php",
         JSON.stringify({
           userId: localStorage.getItem("id"),
           fullname: `${firstName} ${lastName}`,
@@ -78,7 +86,19 @@ export default function Checkout() {
           total: currentPrice,
         })
       );
-      console.log(res.data);
+      if (res.data.success) {
+        setLoad(true);
+        setTimeout(() => {
+          setToast(true);
+        }, 1000);
+        setTimeout(() => {
+          navigate("/");
+          setLoad(false);
+        }, 1500);
+        dispatch(clearCart());
+      } else {
+        console.log(res.data.message);
+      }
     }
     sendOrder();
   };
@@ -112,7 +132,18 @@ export default function Checkout() {
         </div>
         <div className="text-3xl font-bold text-center">Thanh toán</div>
       </div>
-      <div className="w-[1170px] m-auto">
+      <div className="w-[1170px] m-auto relative">
+        {isToast && (
+          <Toast className="fixed top-[150px] right-10">
+            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+              <HiCheck className="h-5 w-5" />
+            </div>
+            <div className="ml-3 text-sm font-normal">
+              Đơn hàng đã được đăt thành công
+            </div>
+            <Toast.Toggle />
+          </Toast>
+        )}
         <div className="checkout">
           <div></div>
           <div className="grid grid-cols-2 gap-x-[30px] mt-20">
@@ -373,6 +404,13 @@ export default function Checkout() {
             </button>
           </div>
         </div>
+        {isLoad && (
+          <div className=" flex justify-center items-center absolute top-[50%] left-[42%] w-[200px] h-[200px] bg-[rgba(0,0,0,0.2)]">
+            <div className=" flex-wrap  gap-2 ">
+              <Spinner aria-label="Extra large spinner example" size="xl" />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Carousel, Breadcrumb, Toast } from "flowbite-react";
+import axios from "axios";
 import { HiCheck } from "react-icons/hi";
+import { FaCartPlus } from "react-icons/fa";
 import { useParams, Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { HiHome } from "react-icons/hi";
@@ -18,6 +20,7 @@ export default function ContentProduct() {
   let { productId } = useParams();
   const [currentProduct, setCurrentProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
+  const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
     async function getData(productId) {
@@ -30,6 +33,20 @@ export default function ContentProduct() {
     }
     getData(productId);
   }, [productId]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost/WriteResfulAPIPHP/api/product/read.php"
+        );
+        setAllProducts(response.data);
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="relative">
@@ -182,17 +199,105 @@ export default function ContentProduct() {
         <div className="text-left w-[1170px] m-auto py-20">
           <h1 className="font-medium text-md">SẢN PHẨM LIÊN QUAN</h1>
           <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 py-5">
-            <Carousel
-              onSlideChange={(index) => console.log("onSlideChange()", index)}
-            >
-              <div className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white">
-                Slide 1
+            <Carousel>
+              <div className="flex h-[200px] w-full">
+                {allProducts.slice(0, 4).map((product) => {
+                  <>
+                    <Link
+                      to={`/product/${product.id}`}
+                      key={product.id}
+                      className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
+                    >
+                      <div className="h-[350px] object-cover">
+                        <img src={product.thumbnail} alt="" />
+                      </div>
+                      <div className="name duration-100">
+                        <p className="mt-[40px] font-normal w-full mb-5">
+                          {product.title}
+                        </p>
+                        <span className="font-medium my-4">
+                          {product.price}₫
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+                    hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
+                    `}
+                      >
+                        <FaCartPlus className=" w-5 h-10 px-1" />
+                        THÊM VÀO GIỎ HÀNG
+                      </button>
+                    </Link>
+                    ;
+                  </>;
+                })}
               </div>
-              <div className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white">
-                Slide 2
+              <div className="flex h-full items-center justify-center bg-gray-400">
+                {allProducts.slice(4, 8).map((product) => {
+                  <>
+                    <Link
+                      to={`/product/${product.id}`}
+                      key={product.id}
+                      className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
+                    >
+                      <div className="h-[350px] object-cover">
+                        <img src={product.thumbnail} alt="" />
+                      </div>
+                      <div className="name duration-100">
+                        <p className="mt-[40px] font-normal w-full mb-5">
+                          {product.title}
+                        </p>
+                        <span className="font-medium my-4">
+                          {product.price}₫
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+                    hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
+                    `}
+                      >
+                        <FaCartPlus className=" w-5 h-10 px-1" />
+                        THÊM VÀO GIỎ HÀNG
+                      </button>
+                    </Link>
+                    ;
+                  </>;
+                })}
               </div>
-              <div className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white">
-                Slide 3
+              <div className="flex h-full items-center justify-center bg-gray-400">
+                {allProducts.slice(8, 12).map((product) => {
+                  <>
+                    <Link
+                      to={`/product/${product.id}`}
+                      key={product.id}
+                      className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
+                    >
+                      <div className="h-[350px] object-cover">
+                        <img src={product.thumbnail} alt="" />
+                      </div>
+                      <div className="name duration-100">
+                        <p className="mt-[40px] font-normal w-full mb-5">
+                          {product.title}
+                        </p>
+                        <span className="font-medium my-4">
+                          {product.price}₫
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+                    hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
+                    `}
+                      >
+                        <FaCartPlus className=" w-5 h-10 px-1" />
+                        THÊM VÀO GIỎ HÀNG
+                      </button>
+                    </Link>
+                    ;
+                  </>;
+                })}
               </div>
             </Carousel>
           </div>

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Sidebar, Button, Modal } from "flowbite-react";
+import React, { useState, useEffect } from "react";
+import { Sidebar, Button, Modal, Accordion, Badge } from "flowbite-react";
+import axios from "axios";
 import { IoLocation } from "react-icons/io5";
 import { BiSolidCoupon } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
@@ -15,6 +16,8 @@ export default function MyAccount() {
   const [order, setOrder] = useState(false);
   const [address, setAddress] = useState(false);
   const [infoAccount, setInfoAccount] = useState(false);
+  const [info, setInfo] = useState([]);
+  const [allOrder, setAllOrder] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   let navigate = useNavigate();
 
@@ -24,6 +27,26 @@ export default function MyAccount() {
     localStorage.removeItem("email");
     navigate("/login");
   };
+
+  useEffect(() => {
+    const getInfoAccount = async (user_id) => {
+      try {
+        const res = await axios.post(
+          "http://localhost/WriteResfulAPIPHP/api/user/getUserById.php",
+          { user_id: user_id }
+        );
+
+        setInfo(res.data);
+
+        const resOrder = await axios.post(
+          "http://localhost/WriteResfulAPIPHP/api/user/getAllOrder.php",
+          { user_id: user_id }
+        );
+        setAllOrder(resOrder.data);
+      } catch (error) {}
+    };
+    getInfoAccount(localStorage.getItem("id"));
+  }, []);
 
   return (
     <div>
@@ -124,9 +147,9 @@ export default function MyAccount() {
             {account && (
               <div>
                 <p>
-                  Xin chào <strong>admin</strong> (không phải tài khoản{" "}
-                  <strong>admin</strong>? Hãy thoát ra và đăng nhập vào tài
-                  khoản của bạn)
+                  Xin chào <strong>{info.fullname}</strong> (không phải tài
+                  khoản <strong>{info.fullname}</strong>? Hãy thoát ra và đăng
+                  nhập vào tài khoản của bạn)
                 </p>
                 <p className="mt-3">
                   Từ trang quản lý tài khoản bạn có thể xem đơn hàng mới, quản
@@ -136,25 +159,84 @@ export default function MyAccount() {
               </div>
             )}
 
-            {order && (
-              <div className="pt-10">
-                <p className="text-4xl font-extrabold">Orders</p>
-                <div className="flex justify-between items-center border-t-[#fd6e4f] border-t-4 w-full h-[70px] mt-2 bg-[#f7f6f7] p-3">
-                  <div className="flex items-center">
-                    <IoCheckmarkCircle className="fill-[#fd6e4f]" />
-                    <p className="font-thin text-base text-slate-500 ml-2">
-                      Bạn chưa có đơn hàng nào.
-                    </p>
+            {order &&
+              (allOrder.length <= 0 ? (
+                <div className="pt-10">
+                  <p className="text-4xl font-extrabold">Orders</p>
+                  <div className="flex justify-between items-center border-t-[#fd6e4f] border-t-4 w-full h-[70px] mt-2 bg-[#f7f6f7] p-3">
+                    <div className="flex items-center">
+                      <IoCheckmarkCircle className="fill-[#fd6e4f]" />
+                      <p className="font-thin text-base text-slate-500 ml-2">
+                        Bạn chưa có đơn hàng nào.
+                      </p>
+                    </div>
+                    <Link
+                      to="/productS"
+                      className="h-full w-[200px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 my-10 text-center"
+                    >
+                      Đến trang sản phẩm
+                    </Link>
                   </div>
-                  <Link
-                    to="/productS"
-                    className="h-full w-[200px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 my-10 text-center"
-                  >
-                    Đến trang sản phẩm
-                  </Link>
                 </div>
-              </div>
-            )}
+              ) : (
+                <div>
+                  <Accordion collapseAll>
+                    {allOrder.map((order) => (
+                      <Accordion.Panel>
+                        <Accordion.Title className="flex items-center justify-between">
+                          <div>Đơn hàng có mã {order.orderId}</div>
+                          <div>Ngày đặt: {order.orderDate}</div>
+                        </Accordion.Title>
+                        <Accordion.Content>
+                          <div>
+                            <div>
+                              <div>Mã đơn: {order.orderId}</div>
+                              {order.products.map((product) => (
+                                <div className="flex items-center justify-between ">
+                                  <p className="font-bold">
+                                    {product.productName}
+                                  </p>
+                                  <p>Đơn giá: {product.unitPrice}</p>
+                                  <p>x{product.quantity}</p>
+                                  <p>
+                                    {(() => {
+                                      return (
+                                        product.unitPrice * product.quantity
+                                      );
+                                    })()}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                            {
+                              (order.status = 2 ? (
+                                <Badge
+                                  color="warning"
+                                  className="w-[100px] mt-2 ml-[90%]"
+                                >
+                                  Chờ xác nhận
+                                </Badge>
+                              ) : (
+                                <Badge
+                                  color="success"
+                                  className="w-[100px] mt-2 ml-[90%]"
+                                >
+                                  Đã giao hàng
+                                </Badge>
+                              ))
+                            }
+
+                            <p className="text-2xl font-normal mt-5 ml-[70%]">
+                              Tổng tiền:
+                              {order.total}
+                            </p>
+                          </div>
+                        </Accordion.Content>
+                      </Accordion.Panel>
+                    ))}
+                  </Accordion>
+                </div>
+              ))}
 
             {address && (
               <div className="pt-10">
@@ -172,12 +254,12 @@ export default function MyAccount() {
                 </Link>
 
                 <p className="mt-[30px]">
-                  Tên người nhận: <strong>Lê Văn Trung</strong>
+                  Tên người nhận: <strong>{info.fullname}</strong>
                 </p>
                 <p>
-                  Số điện thoại: <strong>0567891000</strong>
+                  Số điện thoại: <strong>{info.phoneNumber}</strong>
                 </p>
-                <p>số 34, đường An Dương Vương, Phường 16, Quận 8, TP.HCM</p>
+                <p>{info.address}</p>
               </div>
             )}
 
