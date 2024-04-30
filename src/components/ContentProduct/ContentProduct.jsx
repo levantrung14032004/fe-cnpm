@@ -200,104 +200,101 @@ export default function ContentProduct() {
           <h1 className="font-medium text-md">SẢN PHẨM LIÊN QUAN</h1>
           <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 py-5">
             <Carousel>
-              <div className="flex h-[200px] w-full">
-                {allProducts.slice(0, 4).map((product) => {
-                  <>
-                    <Link
-                      to={`/product/${product.id}`}
-                      key={product.id}
-                      className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
-                    >
-                      <div className="h-[350px] object-cover">
-                        <img src={product.thumbnail} alt="" />
-                      </div>
-                      <div className="name duration-100">
-                        <p className="mt-[40px] font-normal w-full mb-5">
-                          {product.title}
-                        </p>
-                        <span className="font-medium my-4">
-                          {product.price}₫
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+              <div className="flex justify-between gap-x-5 bg-slate-100">
+                {allProducts.slice(0, 4).map((product) => (
+                  <Link
+                    to={`/product/${product.id}`}
+                    key={product.id}
+                    className="h-[360px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md p-3"
+                  >
+                    <div className="h-[250px] object-cover">
+                      <img
+                        src={product.thumbnail}
+                        alt=""
+                        className="scale-90"
+                      />
+                    </div>
+                    <div className="name duration-100">
+                      <p className="mt-[40px] font-normal w-full mb-5">
+                        {product.title}
+                      </p>
+                      <span className="font-medium my-4">{product.price}₫</span>
+                    </div>
+                    <button
+                      type="button"
+                      className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-medium
                     hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
                     `}
-                      >
-                        <FaCartPlus className=" w-5 h-10 px-1" />
-                        THÊM VÀO GIỎ HÀNG
-                      </button>
-                    </Link>
-                    ;
-                  </>;
-                })}
+                    >
+                      <FaCartPlus className="w-5 h-10 px-1" />
+                      THÊM VÀO GIỎ HÀNG
+                    </button>
+                  </Link>
+                ))}
               </div>
-              <div className="flex h-full items-center justify-center bg-gray-400">
-                {allProducts.slice(4, 8).map((product) => {
-                  <>
-                    <Link
-                      to={`/product/${product.id}`}
-                      key={product.id}
-                      className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
-                    >
-                      <div className="h-[350px] object-cover">
-                        <img src={product.thumbnail} alt="" />
-                      </div>
-                      <div className="name duration-100">
-                        <p className="mt-[40px] font-normal w-full mb-5">
-                          {product.title}
-                        </p>
-                        <span className="font-medium my-4">
-                          {product.price}₫
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+              <div className="flex justify-between gap-x-5 bg-slate-100">
+                {allProducts.slice(4, 8).map((product) => (
+                  <Link
+                    to={`/product/${product.id}`}
+                    key={product.id}
+                    className="h-[360px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md p-3"
+                  >
+                    <div className="h-[250px] object-cover">
+                      <img
+                        src={product.thumbnail}
+                        alt=""
+                        className="scale-90"
+                      />
+                    </div>
+                    <div className="name duration-100">
+                      <p className="mt-[40px] font-normal w-full mb-5">
+                        {product.title}
+                      </p>
+                      <span className="font-medium my-4">{product.price}₫</span>
+                    </div>
+                    <button
+                      type="button"
+                      className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-medium
                     hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
                     `}
-                      >
-                        <FaCartPlus className=" w-5 h-10 px-1" />
-                        THÊM VÀO GIỎ HÀNG
-                      </button>
-                    </Link>
-                    ;
-                  </>;
-                })}
+                    >
+                      <FaCartPlus className="w-5 h-10 px-1" />
+                      THÊM VÀO GIỎ HÀNG
+                    </button>
+                  </Link>
+                ))}
               </div>
-              <div className="flex h-full items-center justify-center bg-gray-400">
-                {allProducts.slice(8, 12).map((product) => {
-                  <>
-                    <Link
-                      to={`/product/${product.id}`}
-                      key={product.id}
-                      className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
-                    >
-                      <div className="h-[350px] object-cover">
-                        <img src={product.thumbnail} alt="" />
-                      </div>
-                      <div className="name duration-100">
-                        <p className="mt-[40px] font-normal w-full mb-5">
-                          {product.title}
-                        </p>
-                        <span className="font-medium my-4">
-                          {product.price}₫
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+              <div className="flex justify-between gap-x-5 bg-slate-100">
+                {allProducts.slice(8, 12).map((product) => (
+                  <Link
+                    to={`/product/${product.id}`}
+                    key={product.id}
+                    className="h-[360px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md p-3"
+                  >
+                    <div className="h-[250px] object-cover">
+                      <img
+                        src={product.thumbnail}
+                        alt=""
+                        className="scale-90"
+                      />
+                    </div>
+                    <div className="name duration-100">
+                      <p className="mt-[40px] font-normal w-full mb-5">
+                        {product.title}
+                      </p>
+                      <span className="font-medium my-4">{product.price}₫</span>
+                    </div>
+                    <button
+                      type="button"
+                      className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-medium
                     hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
                     `}
-                      >
-                        <FaCartPlus className=" w-5 h-10 px-1" />
-                        THÊM VÀO GIỎ HÀNG
-                      </button>
-                    </Link>
-                    ;
-                  </>;
-                })}
+                    >
+                      <FaCartPlus className="w-5 h-10 px-1" />
+                      THÊM VÀO GIỎ HÀNG
+                    </button>
+                  </Link>
+                ))}
               </div>
             </Carousel>
           </div>
