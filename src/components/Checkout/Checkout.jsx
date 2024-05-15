@@ -76,6 +76,7 @@ export default function Checkout() {
         "http://localhost/WriteResfulAPIPHP/admin/order/addOrder.php",
         JSON.stringify({
           userId: localStorage.getItem("id"),
+          employeeId: null,
           fullname: `${firstName} ${lastName}`,
           phoneNumber: phoneNumber,
           email: email,

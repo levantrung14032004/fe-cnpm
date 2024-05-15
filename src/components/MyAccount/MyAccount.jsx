@@ -19,6 +19,12 @@ export default function MyAccount() {
   const [info, setInfo] = useState([]);
   const [allOrder, setAllOrder] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState("");
+  const [rePass1, setRePass1] = useState("");
+  const [rePass2, setRePass2] = useState("");
   let navigate = useNavigate();
 
   const handleLogout = () => {
@@ -47,6 +53,42 @@ export default function MyAccount() {
     };
     getInfoAccount(localStorage.getItem("id"));
   }, []);
+
+  const handleChangeInfo = () => {
+    const changeInfo = async () => {
+      if (password === "") {
+        const res = await axios.post(
+          "http://localhost/WriteResfulAPIPHP/api/user/editInfo.php",
+          {
+            user_id: localStorage.getItem("id"),
+            fullname: fullName,
+            firstname: firstName,
+            lastname: lastName,
+          }
+        );
+        if (res.data.success) {
+          alert(res.data.message);
+        }
+        return;
+      }
+      if (firstName === "" || lastName === "" || fullName === "") {
+        const res = await axios.post(
+          "http://localhost/WriteResfulAPIPHP/api/user/changePass.php",
+          {
+            user_id: localStorage.getItem("id"),
+            current_password: password,
+            rePass1: rePass1,
+            rePass2: rePass2,
+          }
+        );
+        if (res.data.success) {
+          alert(res.data.message);
+        }
+        return;
+      }
+    };
+    changeInfo();
+  };
 
   return (
     <div>
@@ -279,6 +321,10 @@ export default function MyAccount() {
                         name=""
                         id="first-name"
                         className="outline-none border w-full my-2 px-2 py-2"
+                        value={firstName}
+                        onChange={(e) => {
+                          setFirstName(e.target.value);
+                        }}
                       />
                     </div>
                   </div>
@@ -295,6 +341,10 @@ export default function MyAccount() {
                         name=""
                         id="last-name"
                         className="outline-none border w-[100%] my-2 px-2 py-2"
+                        value={lastName}
+                        onChange={(e) => {
+                          setLastName(e.target.value);
+                        }}
                       />
                     </div>
                   </div>
@@ -312,6 +362,10 @@ export default function MyAccount() {
                       name=""
                       id="first-name"
                       className="outline-none border w-full my-2 px-2 py-2"
+                      value={fullName}
+                      onChange={(e) => {
+                        setFullName(e.target.value);
+                      }}
                     />
                   </div>
                 </div>
@@ -333,6 +387,10 @@ export default function MyAccount() {
                         name=""
                         id="current-pass"
                         className="outline-none border w-full my-2 px-2 py-2"
+                        value={password}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                        }}
                       />
                     </div>
                   </div>
@@ -348,6 +406,10 @@ export default function MyAccount() {
                         name=""
                         id="new-pass"
                         className="outline-none border w-full my-2 px-2 py-2"
+                        value={rePass1}
+                        onChange={(e) => {
+                          setRePass1(e.target.value);
+                        }}
                       />
                     </div>
                   </div>
@@ -363,12 +425,17 @@ export default function MyAccount() {
                         name=""
                         id="repeat-pass"
                         className="outline-none border w-full my-2 px-2 py-2"
+                        value={rePass2}
+                        onChange={(e) => {
+                          setRePass2(e.target.value);
+                        }}
                       />
                     </div>
                   </div>
                   <button
                     type="button"
                     className="h-full w-[150px] bg-orange-500 text-white p-2 font-bold hover:bg-slate-900 duration-200 my-10"
+                    onClick={handleChangeInfo}
                   >
                     Lưu thay đổi
                   </button>
