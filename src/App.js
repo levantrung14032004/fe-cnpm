@@ -16,7 +16,7 @@ import Layout from "./components/Layout/Layout.js";
 import Products from "./components/Products/Products.jsx";
 import Payment from "./components/Checkout/Checkout.jsx";
 import SearchProduct from "./components/SearchProduct/SearchProduct.jsx";
-import newProduct from "./components/newProduct.jsx";
+// import newProduct from "./components/newProduct.jsx";
 
 function App() {
   return (

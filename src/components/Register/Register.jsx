@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../config/configAxios";
 import "./Register.css";
 import { validEmail } from "../regex.js";
 
@@ -16,7 +16,20 @@ export default function Register() {
   const [flagPass, setFlagPass] = useState(false);
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
-
+  useEffect(() => {
+    try {
+      axios
+        .get("/test")
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          window.location.href = "http://localhost:3000/login";
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   function generateRandomCode() {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let code = "";

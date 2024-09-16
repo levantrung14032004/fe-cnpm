@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../../config/configAxios";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
@@ -23,10 +23,7 @@ export default function Login() {
       setPwdError(true);
     }
 
-    const response = await axios.post(
-      "http://localhost/WriteResfulAPIPHP/model/login.php",
-      JSON.stringify({ email, password })
-    );
+    const response = await axios.post("/auth/login", { email, password });
     console.log(response.data);
     if (response.data.success) {
       navigate("/");
