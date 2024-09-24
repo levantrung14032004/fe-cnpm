@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../Slice/cartSlice";
@@ -6,80 +6,76 @@ import { Link } from "react-router-dom";
 import { Pagination } from "flowbite-react";
 import { CgMenuGridR } from "react-icons/cg";
 import { FaCartPlus } from "react-icons/fa";
-
 import { Breadcrumb } from "flowbite-react";
-
-export default function Products() {
+import { fetchAllProducts } from "../../Slice/products";
+import Spinner from "../Spinner/Spinner";
+const Products = React.memo(() => {
   const [currentPage, setCurrentPage] = useState(1);
   const onPageChange = (page) => setCurrentPage(page);
   const [fillterValue, setFillterValue] = useState("");
-  const [isMounted, setIsMounted] = useState(false);
-  const [allProducts, setAllProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState();
   const productInCart = useSelector((state) => state.cart.items);
+  const [totalPages, setTotalPages] = useState(0);
+  const [productsInCurrentPage, setProductsInCurrentPage] = useState();
+  const [countProduct, setCountProduct] = useState();
+  const itemsPerPage = 12;
   const dispatch = useDispatch();
-
+  const { products, loading } = useSelector(
+    (state) => state.products.products_page
+  );
   useEffect(() => {
-    if (!isMounted) {
-      fetchData();
-      setIsMounted(true);
-    }
-  }, [isMounted]);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost/WriteResfulAPIPHP/api/product/read.php"
-      );
-      setAllProducts(response.data);
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  };
+    dispatch(fetchAllProducts());
+  }, []);
   useEffect(() => {
     const handleFillProduct = () => {
-      let apiLink = "";
       switch (fillterValue) {
         case "1":
-          apiLink = "http://localhost/WriteResfulAPIPHP/api/product/read.php";
+          setAllProducts(products.new_products);
           break;
         case "2":
-          apiLink =
-            "http://localhost:80/WriteResfulAPIPHP/api/product/readHighToLow.php";
+          setAllProducts(products.price);
           break;
         case "3":
-          apiLink =
-            "http://localhost/WriteResfulAPIPHP/api/product/readLowToHigh.php";
+          setAllProducts(products.price_desc);
           break;
         default:
-          apiLink = "http://localhost/WriteResfulAPIPHP/api/product/read.php";
+          setAllProducts(products.new_products);
           break;
       }
-      async function fetchData() {
-        try {
-          const response = await axios.get(apiLink);
-          setAllProducts(response.data);
-        } catch (error) {
-          throw new Error(error.message);
-        }
-      }
-      fetchData();
     };
-    handleFillProduct();
-  }, [fillterValue]);
-
+    if (Object.keys(products).length > 0) {
+      handleFillProduct();
+    }
+  }, [fillterValue, products]);
+  useEffect(() => {
+    if (Object.keys(products).length > 0) {
+      setTotalPages(Math.ceil(products.new_products.length / itemsPerPage));
+    }
+  }, [products]);
+  useEffect(() => {
+    if (allProducts) {
+      setProductsInCurrentPage(renderProduct(currentPage, itemsPerPage));
+      const textCount =
+        "Hiển thị " +
+        ((currentPage - 1) * itemsPerPage + 1) +
+        "-" +
+        ((currentPage - 1) * itemsPerPage + 1 + itemsPerPage >
+        allProducts.length + 1
+          ? allProducts.length + 1
+          : (currentPage - 1) * itemsPerPage + 1 + itemsPerPage) +
+        " của " +
+        (allProducts.length + 1) +
+        " kết quả";
+      setCountProduct(textCount);
+    }
+  }, [allProducts, currentPage]);
   // Pagination
-  const itemsPerPage = 12;
-  const totalPages = Math.ceil(allProducts.length / itemsPerPage);
-
   const renderProduct = (pageNumber, itemsPerPage) => {
     const startIndex = (pageNumber - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const pageData = allProducts.slice(startIndex, endIndex);
     return pageData;
   };
-
-  const productsInCurrentPage = renderProduct(currentPage, itemsPerPage);
-
   const formatNumber = (number) => {
     const formatter = new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -88,7 +84,9 @@ export default function Products() {
     let numFormat = formatter.format(number);
     return numFormat;
   };
-
+  if (loading) {
+    return <Spinner />;
+  }
   return (
     <div>
       <div className="products pb-[120px]">
@@ -113,14 +111,7 @@ export default function Products() {
               <div>
                 <CgMenuGridR className="w-[30px] h-[30px]" />
               </div>
-              <p className="font-medium text-medium">
-                Hiển thị {(currentPage - 1) * itemsPerPage + 1}-
-                {(currentPage - 1) * itemsPerPage + 1 + itemsPerPage >
-                allProducts.length + 1
-                  ? allProducts.length + 1
-                  : (currentPage - 1) * itemsPerPage + 1 + itemsPerPage}{" "}
-                của {allProducts.length + 1} kết quả
-              </p>
+              <p className="font-medium text-medium">{countProduct}</p>
             </div>
             <div className="h-[40px]">
               <select
@@ -137,48 +128,49 @@ export default function Products() {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-x-6 mt-[60px] gap-y-2">
-            {productsInCurrentPage.map((product, index) => (
-              <Link
-                to={`/product/${product.id}`}
-                key={index}
-                className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
-              >
-                <div className="h-[350px] object-cover">
-                  <img src={product.thumbnail} alt="" />
-                </div>
-                <div className="name duration-100 p-2">
-                  <p className="mt-[40px] font-normal w-full mb-5">
-                    {product.title}
-                  </p>
-                  <span className="font-medium my-4">
-                    {formatNumber(product.price)}
-                  </span>
-                </div>
-                <Link to="/cart">
-                  <button
-                    type="button"
-                    className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+            {productsInCurrentPage &&
+              productsInCurrentPage.map((product, index) => (
+                <Link
+                  to={`/product/${product.id}`}
+                  key={index}
+                  className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
+                >
+                  <div className="h-[350px] object-cover">
+                    <img src={product.thumbnail} alt="" />
+                  </div>
+                  <div className="name duration-100 p-2">
+                    <p className="mt-[40px] font-normal w-full mb-5">
+                      {product.title}
+                    </p>
+                    <span className="font-medium my-4">
+                      {formatNumber(product.price)}
+                    </span>
+                  </div>
+                  <Link to="/cart">
+                    <button
+                      type="button"
+                      className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
                   hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
                   `}
-                    onClick={() => {
-                      dispatch(
-                        addProduct({
-                          id: product.id,
-                          name: product.title,
-                          price: product.price,
-                          quantity: 1,
-                          total: product.price * 1,
-                          thumbnail: product.thumbnail,
-                        })
-                      );
-                    }}
-                  >
-                    <FaCartPlus className=" w-5 h-10 px-1" />
-                    THÊM VÀO GIỎ HÀNG
-                  </button>
+                      onClick={() => {
+                        dispatch(
+                          addProduct({
+                            id: product.id,
+                            name: product.title,
+                            price: product.price,
+                            quantity: 1,
+                            total: product.price * 1,
+                            thumbnail: product.thumbnail,
+                          })
+                        );
+                      }}
+                    >
+                      <FaCartPlus className=" w-5 h-10 px-1" />
+                      THÊM VÀO GIỎ HÀNG
+                    </button>
+                  </Link>
                 </Link>
-              </Link>
-            ))}
+              ))}
           </div>
           <div className="flex overflow-x-auto sm:justify-center mt-[30px]">
             <Pagination
@@ -192,4 +184,5 @@ export default function Products() {
       </div>
     </div>
   );
-}
+});
+export default Products;

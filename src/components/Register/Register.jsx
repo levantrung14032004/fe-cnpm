@@ -19,7 +19,7 @@ export default function Register() {
   useEffect(() => {
     try {
       axios
-        .get("/test")
+        .get("/api/test")
         .then((res) => {
           console.log(res);
         })

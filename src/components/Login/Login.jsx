@@ -25,7 +25,7 @@ export default function Login() {
 
     const response = await axios.post("/auth/login", { email, password });
     console.log(response.data);
-    if (response.data.success) {
+    if (response.error === 0) {
       navigate("/");
       localStorage.setItem("id", response.data.role_id);
     } else {
