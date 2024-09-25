@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext } from "react";
-import axios from "axios";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
@@ -38,7 +37,6 @@ function App() {
               </Layout>
             }
           ></Route>
-
           <Route
             path="/products"
             element={
@@ -55,6 +53,7 @@ function App() {
               </Layout>
             }
           ></Route>
+
           <Route
             path="/register"
             element={
@@ -111,6 +110,7 @@ function App() {
               </Layout>
             }
           ></Route>
+          <Route path="*" element={<h1>404 Not Found</h1>}></Route>
         </Routes>
       </Router>
     </Provider>

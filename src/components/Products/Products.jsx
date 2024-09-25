@@ -84,9 +84,7 @@ const Products = React.memo(() => {
     let numFormat = formatter.format(number);
     return numFormat;
   };
-  if (loading) {
-    return <Spinner />;
-  }
+ 
   return (
     <div>
       <div className="products pb-[120px]">

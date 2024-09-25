@@ -1,40 +1,29 @@
-import React, { useState } from "react";
-import axios from "../../config/configAxios";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import "./Login.css";
-import { validEmail, validPassword } from "../regex.js";
-
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../Slice/loginSlice.js";
+import Spinner from "../Spinner/Spinner.js";
 export default function Login() {
-  const [emailErr, setEmailErr] = useState(false);
-  const [pwdError, setPwdError] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState("");
-  let navigate = useNavigate();
-
-  const handleLogin = async () => {
-    if (!validEmail.test(email)) {
-      setEmailErr(true);
-    }
-    if (!validPassword.test(password)) {
-      setPwdError(true);
-    }
-
-    const response = await axios.post("/auth/login", { email, password });
-    console.log(response.data);
-    if (response.error === 0) {
-      navigate("/");
-      localStorage.setItem("id", response.data.role_id);
-    } else {
-      setMessage(response.data.message);
-    }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading, message, error } = useSelector((state) => state.login);
+  const handleLogin = () => {
+    dispatch(login({ email, password }));
   };
-
+  useEffect(() => {
+    if (error === 0) {
+      navigate("/");
+    }
+  }, [error]);
   return (
     <div>
+      {loading && <Spinner />}
       <div className="breadcrumb bg-[#f4f9fc] h-[110px] py-5 ">
         <div className="flex items-center justify-center">
           <a href="/" className="px-1">
@@ -122,15 +111,7 @@ export default function Login() {
           >
             Đăng Nhập
           </button>
-          {emailErr && (
-            <p className="ont-thin text-red-600">Your email is invalid</p>
-          )}
-          {pwdError && (
-            <p className="ont-thin text-red-600">Your password is invalid</p>
-          )}
-          {message !== "" && (
-            <p className="font-thin text-red-600">{message}</p>
-          )}
+          {message && <p className="font-thin text-red-600">{message}</p>}
         </div>
       </div>
     </div>
