@@ -8,7 +8,7 @@ export const login = createAsyncThunk(
       const response = await axios.post("/auth/login", { email, password });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -34,10 +34,10 @@ const loginSlice = createSlice({
         state.loading = false;
         state.message = action.payload.message;
         state.error = action.payload.error;
-        // window.location.href = "/";
       })
-      .addCase(login.rejected, (state) => {
+      .addCase(login.rejected, (state, action) => {
         state.loading = false;
+        state.message = action.payload.message;
       });
   },
 });

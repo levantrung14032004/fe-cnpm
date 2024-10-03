@@ -14,10 +14,14 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, message, error } = useSelector((state) => state.login);
+  const [notification, setNotification] = useState("");
   const status = useSelector((state) => state.status);
   const handleLogin = () => {
     dispatch(login({ email, password }));
   };
+  useEffect(() => {
+    setNotification(message || "");
+  }, [message]);
   useEffect(() => {
     if (error === 0) {
       dispatch(check_status());

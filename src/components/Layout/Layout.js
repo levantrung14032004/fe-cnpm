@@ -15,7 +15,6 @@ export default function Layout({ children }) {
   const products_page = useSelector((state) => state.products.products_page);
   const category = useSelector((state) => state.category);
   const [isLogin, setIsLogin] = useState(null);
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
     dispatch(fetchAllProducts());
     dispatch(fetchAllCategory());
@@ -23,15 +22,12 @@ export default function Layout({ children }) {
   }, []);
   useEffect(() => {
     if (status.error === 0) {
-      setLoading(false);
       setIsLogin(true);
-      window.history.pushState({}, "", "/");
     } else {
-      setLoading(false);
       setIsLogin(false);
     }
   }, [status.error]);
-  if (isLogin === null || loading) {
+  if (isLogin === null) {
     return <Spinner />;
   }
   return (
