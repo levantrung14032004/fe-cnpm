@@ -6,6 +6,7 @@ import "./Login.css";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Slice/loginSlice.js";
 import Spinner from "../Spinner/Spinner.js";
+import { check_status } from "../../Slice/status.js";
 export default function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -18,6 +19,7 @@ export default function Login() {
   };
   useEffect(() => {
     if (error === 0) {
+      dispatch(check_status());
       navigate("/");
     }
   }, [error]);

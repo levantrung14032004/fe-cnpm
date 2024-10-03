@@ -15,21 +15,7 @@ export default function Register() {
   const [flag, setFlag] = useState(false);
   const [flagPass, setFlagPass] = useState(false);
   const navigate = useNavigate();
-  const [message, setMessage] = useState("");
-  useEffect(() => {
-    try {
-      axios
-        .get("/api/test")
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          window.location.href = "http://localhost:3000/login";
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const [message, setMessage] = useState("")
   function generateRandomCode() {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let code = "";
@@ -48,16 +34,13 @@ export default function Register() {
     if (!validEmail.test(email)) {
       setEmailErr(true);
     }
-    const SERVICE_ID = "service_ya55pmw";
-    const TEMPLATE_ID = "template_7s7l3dp";
-    const PUBLIC_KEY = "pXtlsZO24cP_oKbtG";
     const code = generateRandomCode();
     setCodeInEmail(code);
 
     var data = {
-      service_id: SERVICE_ID,
-      template_id: TEMPLATE_ID,
-      user_id: PUBLIC_KEY,
+      service_id: process.env.REACT_APP_SERVICE_ID,
+      template_id: process.env.REACT_APP_TEMPLATE_ID,
+      user_id: process.env.REACT_APP_PUBLIC_KEY,
       template_params: {
         to_email: email,
         to_name: email,

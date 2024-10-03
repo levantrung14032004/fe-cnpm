@@ -9,17 +9,12 @@ import rightBottomBanner from "../../Images/Banner/rightBottom.jpg";
 import chieuHoangKi from "../../Images/Banner/ChieuHoangKi.jpg";
 import tarotKieu from "../../Images/Banner/tarotKieu.jpg";
 import thunhoibong from "../../Images/Banner/thunhoibongvang.jpg";
-import { fetchProducts_mainpage } from "../../Slice/products";
 import { useDispatch, useSelector } from "react-redux";
-import Spinner from "../Spinner/Spinner";
+import Spinner from "../Spinner/Spinner"; 
 export default function () {
-  const { products, loading } = useSelector(
+  const { newProducts, byCategory1, byCategory2 } = useSelector(
     (state) => state.products.products_mainpage
   );
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchProducts_mainpage({ category_id1: 7, category_id2: 6 }));
-  }, []);
   return (
     <>
       {/* {loading && <Spinner />} */}
@@ -77,33 +72,32 @@ export default function () {
           </h1>
           <h1 className="text-2xl font-bold">Sản phẩm mới</h1>
           <div className="grid grid-rows-2 grid-cols-4 gap-x-6 mt-[30px]">
-            {products.new_products &&
-              products.new_products.map((product) => (
-                <Link
-                  to={`/product/${product.id}`}
-                  key={product.id}
-                  className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
-                >
-                  <div className="h-[350px] object-cover">
-                    <img src={product.thumbnail} alt="" />
-                  </div>
-                  <div className="name duration-100">
-                    <p className="mt-[40px] font-normal w-full mb-5">
-                      {product.title}
-                    </p>
-                    <span className="font-medium my-4">{product.price}₫</span>
-                  </div>
-                  <button
-                    type="button"
-                    className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+            {newProducts.map((product) => (
+              <Link
+                to={`/product/${product.id}`}
+                key={product.id}
+                className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
+              >
+                <div className="h-[350px] object-cover">
+                  <img src={product.thumbnail} alt="" />
+                </div>
+                <div className="name duration-100">
+                  <p className="mt-[40px] font-normal w-full mb-5">
+                    {product.title}
+                  </p>
+                  <span className="font-medium my-4">{product.price}₫</span>
+                </div>
+                <button
+                  type="button"
+                  className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
               hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
                `}
-                  >
-                    <FaCartPlus className=" w-5 h-10 px-1" />
-                    THÊM VÀO GIỎ HÀNG
-                  </button>
-                </Link>
-              ))}
+                >
+                  <FaCartPlus className=" w-5 h-10 px-1" />
+                  THÊM VÀO GIỎ HÀNG
+                </button>
+              </Link>
+            ))}
           </div>
           <Link
             to="/products"
@@ -155,33 +149,32 @@ export default function () {
             Các truyện tranh của tác giả Việt Nam
           </h1>
           <div className="grid grid-rows-2 grid-cols-4 gap-x-6 mt-[30px]">
-            {products.by_category1 &&
-              products.by_category1.map((product) => (
-                <Link
-                  to={`/product/${product.id}`}
-                  key={product.id}
-                  className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
-                >
-                  <div className="h-[350px] object-cover">
-                    <img src={product.thumbnail} alt="" />
-                  </div>
-                  <div className="name duration-100">
-                    <p className="mt-[40px] font-normal w-full mb-5">
-                      {product.title}
-                    </p>
-                    <span className="font-medium my-4">{product.price}₫</span>
-                  </div>
-                  <button
-                    type="button"
-                    className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+            {byCategory1.map((product) => (
+              <Link
+                to={`/product/${product.id}`}
+                key={product.id}
+                className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
+              >
+                <div className="h-[350px] object-cover">
+                  <img src={product.thumbnail} alt="" />
+                </div>
+                <div className="name duration-100">
+                  <p className="mt-[40px] font-normal w-full mb-5">
+                    {product.title}
+                  </p>
+                  <span className="font-medium my-4">{product.price}₫</span>
+                </div>
+                <button
+                  type="button"
+                  className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
               hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
                `}
-                  >
-                    <FaCartPlus className=" w-5 h-10 px-1" />
-                    THÊM VÀO GIỎ HÀNG
-                  </button>
-                </Link>
-              ))}
+                >
+                  <FaCartPlus className=" w-5 h-10 px-1" />
+                  THÊM VÀO GIỎ HÀNG
+                </button>
+              </Link>
+            ))}
           </div>
           <Link
             to="/"
@@ -210,33 +203,32 @@ export default function () {
           </h1>
           <div className="grid grid-rows-1 grid-cols-4 gap-x-6 mt-[30px]">
             {/* Product item */}
-            {products.by_category2 &&
-              products.by_category2.map((product) => (
-                <Link
-                  to={`/product/${product.id}`}
-                  key={product.id}
-                  className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
-                >
-                  <div className="h-[350px] object-cover">
-                    <img src={product.thumbnail} alt="" />
-                  </div>
-                  <div className="name duration-100">
-                    <p className="mt-[40px] font-normal w-full mb-5">
-                      {product.title}
-                    </p>
-                    <span className="font-medium my-4">{product.price}</span>
-                  </div>
-                  <button
-                    type="button"
-                    className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
+            {byCategory2.map((product) => (
+              <Link
+                to={`/product/${product.id}`}
+                key={product.id}
+                className="h-[490px] product-item relative duration-1000 hover:cursor-pointer hover:shadow-md"
+              >
+                <div className="h-[350px] object-cover">
+                  <img src={product.thumbnail} alt="" />
+                </div>
+                <div className="name duration-100">
+                  <p className="mt-[40px] font-normal w-full mb-5">
+                    {product.title}
+                  </p>
+                  <span className="font-medium my-4">{product.price}</span>
+                </div>
+                <button
+                  type="button"
+                  className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
                     hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
                     `}
-                  >
-                    <FaCartPlus className=" w-5 h-10 px-1" />
-                    THÊM VÀO GIỎ HÀNG
-                  </button>
-                </Link>
-              ))}
+                >
+                  <FaCartPlus className=" w-5 h-10 px-1" />
+                  THÊM VÀO GIỎ HÀNG
+                </button>
+              </Link>
+            ))}
           </div>
           <Link
             to="/"

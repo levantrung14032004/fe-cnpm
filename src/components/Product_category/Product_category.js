@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../Slice/cartSlice";
@@ -6,9 +7,10 @@ import { Pagination } from "flowbite-react";
 import { CgMenuGridR } from "react-icons/cg";
 import { FaCartPlus } from "react-icons/fa";
 import { Breadcrumb } from "flowbite-react";
-import { fetchAllProducts } from "../../Slice/products";
-import Spinner from "../Spinner/Spinner";
-const Products = React.memo(() => {
+import { getProductsByCategory } from "../../Slice/products";
+import { findCategory } from "../../Slice/categorySlice";
+const Product_category = React.memo(() => {
+  const category_id = useParams().category_id;
   const [currentPage, setCurrentPage] = useState(1);
   const onPageChange = (page) => setCurrentPage(page);
   const [fillterValue, setFillterValue] = useState("");
@@ -19,36 +21,41 @@ const Products = React.memo(() => {
   const [countProduct, setCountProduct] = useState();
   const itemsPerPage = 12;
   const dispatch = useDispatch();
-  const { byUpdatedAt, byPriceAsc, byPriceDesc, loading } = useSelector(
-    (state) => state.products.products_page
+  const products = useSelector((state) => state.products.product_category);
+  const { byUpdatedAt } = useSelector((state) => state.products.products_page);
+  const { categories, category_current } = useSelector(
+    (state) => state.category
   );
-
+  useEffect(() => {
+    dispatch(findCategory({ id: category_id }));
+  }, [category_id, categories]);
+  useEffect(() => {
+    if (byUpdatedAt) {
+      dispatch(getProductsByCategory({ category_id, byUpdatedAt }));
+    }
+  }, [byUpdatedAt]);
   useEffect(() => {
     const handleFillProduct = () => {
       switch (fillterValue) {
         case "1":
-          setAllProducts(byUpdatedAt);
+          setAllProducts(products.byUpdatedAt);
           break;
         case "2":
-          setAllProducts(byPriceAsc);
+          setAllProducts(products.byPriceAsc);
           break;
         case "3":
-          setAllProducts(byPriceDesc);
+          setAllProducts(products.byPriceDesc);
           break;
         default:
-          setAllProducts(byUpdatedAt);
+          setAllProducts(products.byUpdatedAt);
           break;
       }
     };
-    if (byUpdatedAt && byPriceAsc && byPriceDesc) {
-      handleFillProduct();
-    }
-  }, [fillterValue, byUpdatedAt, byPriceAsc, byPriceDesc]);
+    handleFillProduct();
+  }, [fillterValue, products]);
   useEffect(() => {
-    if (byUpdatedAt) {
-      setTotalPages(Math.ceil(byUpdatedAt.length / itemsPerPage));
-    }
-  }, [byUpdatedAt]);
+    setTotalPages(Math.ceil(products.byUpdatedAt.length / itemsPerPage));
+  }, [products]);
   useEffect(() => {
     if (allProducts) {
       setProductsInCurrentPage(renderProduct(currentPage, itemsPerPage));
@@ -94,7 +101,9 @@ const Products = React.memo(() => {
                 <Link to="/">Trang Chủ</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <Link to="/products">Sản phẩm</Link>{" "}
+                <Link to="/products">
+                  {category_current && category_current.name}
+                </Link>{" "}
               </Breadcrumb.Item>
             </div>
           </div>
@@ -144,8 +153,8 @@ const Products = React.memo(() => {
                     <button
                       type="button"
                       className={`h-[40px] w-11/12 m-auto bg-orange-500 text-white p-2 font-bold
-                  hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
-                  `}
+                    hover:bg-slate-900 duration-200 items-center justify-center absolute top-[80%] left-3
+                    `}
                       onClick={() => {
                         dispatch(
                           addProduct({
@@ -181,4 +190,5 @@ const Products = React.memo(() => {
     </div>
   );
 });
-export default Products;
+
+export default Product_category;

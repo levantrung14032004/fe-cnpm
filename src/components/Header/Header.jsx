@@ -10,10 +10,8 @@ import { BsCart } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteProduct } from "../../Slice/cartSlice";
-
 import logo from "../../Images/Comi_shop_logo.png";
 import "./header.css";
-
 export default function Header() {
   const productInCart = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
@@ -23,8 +21,13 @@ export default function Header() {
   const [showToast, setShowToast] = useState(false);
   const [currentPrice, setCurrentPrice] = useState(0);
   const [searchValue, setSearchValue] = useState("");
+  const [status_login, setStatus_login] = useState(false);
+  const status = useSelector((state) => state.status);
+  console.log(status.error);
   const navigate = useNavigate();
-
+  useEffect(() => {
+    setStatus_login(status.error === 0 ? true : false);
+  }, [status.error]);
   function handleCloseModal() {
     setEnable("hidden");
   }
@@ -111,9 +114,7 @@ export default function Header() {
               </div>
             </Link>
 
-            <Link
-              to={`${localStorage.getItem("id") ? "/my-account" : "/login"}`}
-            >
+            <Link to={status_login ? "/my-account" : "/login"}>
               <li className="navbar-item px-1 py-[20px]">TÀI KHOẢN CỦA TÔI</li>
             </Link>
           </ul>
@@ -163,13 +164,12 @@ export default function Header() {
               />
             </div>
             {/* User */}
-            <Link
-              to={`${localStorage.getItem("id") ? "/my-account" : "/login"}`}
-            >
+            <Link to={status_login ? "/my-account" : "/login"}>
               <div>
                 <AiOutlineUser />
               </div>
             </Link>
+
             {/* Cart */}
             <div
               className="flex items-starts relative "

@@ -4,7 +4,7 @@ import React from "react";
 const Spinner = React.memo(() => {
   return (
     <div className="container-spinner">
-      <ClipLoader color="#198aff" />
+      <ClipLoader color="#fd6e4f"/>
     </div>
   );
 });

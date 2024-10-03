@@ -32,7 +32,7 @@ export default function MyAccount() {
     localStorage.removeItem("id");
     localStorage.removeItem("email");
     navigate("/login");
-  };
+  };  
 
   useEffect(() => {
     const getInfoAccount = async (user_id) => {
