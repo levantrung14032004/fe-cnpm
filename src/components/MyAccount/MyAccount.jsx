@@ -9,6 +9,9 @@ import { HiArrowSmLeft, HiUser, HiViewBoards } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 
 import { FaTachometerAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../Slice/status";
+import { setIsLogin } from "../../Slice/loginSlice";
 import "./MyAccount.css";
 
 export default function MyAccount() {
@@ -26,13 +29,13 @@ export default function MyAccount() {
   const [rePass1, setRePass1] = useState("");
   const [rePass2, setRePass2] = useState("");
   let navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleLogout = () => {
     setOpenModal(true);
-    localStorage.removeItem("id");
-    localStorage.removeItem("email");
+    dispatch(logout());
+    dispatch(setIsLogin(1));
     navigate("/login");
-  };  
+  };
 
   useEffect(() => {
     const getInfoAccount = async (user_id) => {

@@ -23,10 +23,9 @@ export default function Header() {
   const [searchValue, setSearchValue] = useState("");
   const [status_login, setStatus_login] = useState(false);
   const status = useSelector((state) => state.status);
-  console.log(status.error);
   const navigate = useNavigate();
   useEffect(() => {
-    setStatus_login(status.error === 0 ? true : false);
+    setStatus_login(status.error === 0);
   }, [status.error]);
   function handleCloseModal() {
     setEnable("hidden");

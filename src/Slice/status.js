@@ -12,6 +12,17 @@ export const check_status = createAsyncThunk(
     }
   }
 );
+export const logout = createAsyncThunk(
+  "logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("/auth/logout");
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
 const statusSlice = createSlice({
   name: "status",
@@ -30,6 +41,16 @@ const statusSlice = createSlice({
         state.loading = false;
       })
       .addCase(check_status.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.error = action.payload.error === 0 ? 1 : 0;
+        state.loading = false;
+      })
+      .addCase(logout.rejected, (state) => {
         state.loading = false;
       });
   },

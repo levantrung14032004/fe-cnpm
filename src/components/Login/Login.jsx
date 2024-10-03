@@ -14,6 +14,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, message, error } = useSelector((state) => state.login);
+  const status = useSelector((state) => state.status);
   const handleLogin = () => {
     dispatch(login({ email, password }));
   };
@@ -23,6 +24,9 @@ export default function Login() {
       navigate("/");
     }
   }, [error]);
+  if (status.loading) {
+    return <Spinner />;
+  }
   return (
     <div>
       {loading && <Spinner />}
