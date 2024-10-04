@@ -15,7 +15,7 @@ export default function SearchProduct() {
   useEffect(() => {
     const callApi = async () => {
       const res = await axios.get(
-        `http://localhost:80/WriteResfulAPIPHP/api/product/find.php?search=${valueSearch}`
+        `http://localhost:3006/api/search?name=${valueSearch}`
       );
       setProductBySearch(res.data);
     };

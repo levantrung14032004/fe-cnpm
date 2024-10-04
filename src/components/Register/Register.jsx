@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../config/configAxios";
 import "./Register.css";
@@ -15,7 +15,7 @@ export default function Register() {
   const [flag, setFlag] = useState(false);
   const [flagPass, setFlagPass] = useState(false);
   const navigate = useNavigate();
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
   function generateRandomCode() {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let code = "";
